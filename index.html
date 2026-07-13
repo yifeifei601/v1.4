@@ -743,7 +743,8 @@
         font-size: 15px;
       }
 
-      #restartBtn {
+      #restartBtn,
+      #modeMenuBtn {
         min-width: 76px;
       }
 
@@ -820,7 +821,8 @@
                 <button class="btn green" id="dropBtn">投放</button>
                 <button class="btn" id="rightBtn">右移</button>
                 <button class="btn primary" id="partyBtn">派对一下</button>
-                <button class="btn" id="restartBtn">菜单</button>
+                <button class="btn" id="modeMenuBtn">换模式</button>
+                <button class="btn" id="restartBtn">暂停</button>
               </div>
             </div>
           </div>
@@ -894,6 +896,7 @@
       drop: document.getElementById("dropBtn"),
       right: document.getElementById("rightBtn"),
       party: document.getElementById("partyBtn"),
+      modeMenu: document.getElementById("modeMenuBtn"),
       restart: document.getElementById("restartBtn"),
       music: document.getElementById("musicBtn"),
       haptic: document.getElementById("hapticBtn"),
@@ -913,6 +916,8 @@
     const PRESSURE_SCORE_GRACE = 900;
     const BUBU_START_LEVEL = 11;
     const BUBU_FINAL_LEVEL = 15;
+    const BUBU_HOLD_MS = 5000;
+    const BUBU_GROW_MS = 900;
     const PRESSURE_UNLOCK_LEVEL = 5;
     const EVIL_LEVEL = 11;
     const EVIL_RADIUS_MIN = 20;
@@ -920,22 +925,22 @@
     const EVIL_PREVIEW_RADIUS = 27;
     const gravity = 980;
     const fruitTypes = [
-      { name: "01", src: "assets/fruit-01.png?v=1.4.2", r: 14, score: 2, crop: [0, 0, 640, 607], visualScale: 1.1  },
-      { name: "02", src: "assets/fruit-02.png?v=1.4.2", r: 18, score: 5, crop: [0, 0, 640, 640], visualScale: 1.1  },
-      { name: "03", src: "assets/fruit-03.png?v=1.4.2", r: 22, score: 10, crop: [0, 0, 640, 441], visualScale: 1.09  },
-      { name: "04", src: "assets/fruit-04.png?v=1.4.2", r: 27, score: 18, crop: [0, 0, 640, 582], visualScale: 1.08  },
-      { name: "05", src: "assets/fruit-05.png?v=1.4.2", r: 32, score: 32, crop: [0, 0, 563, 640], visualScale: 1.08, physicsScale: 0.86  },
-      { name: "06", src: "assets/fruit-06.png?v=1.4.2", r: 38, score: 55, crop: [0, 0, 640, 501], visualScale: 1.07  },
-      { name: "07", src: "assets/fruit-07.png?v=1.4.2", r: 44, score: 90, crop: [0, 0, 640, 576], visualScale: 1.07  },
-      { name: "08", src: "assets/fruit-08.png?v=1.4.2", r: 50, score: 145, crop: [0, 0, 640, 640], visualScale: 1.06  },
-      { name: "09", src: "assets/fruit-09.png?v=1.4.2", r: 57, score: 230, crop: [0, 0, 640, 640], visualScale: 1.06  },
-      { name: "10", src: "assets/fruit-10.png?v=1.4.2", r: 64, score: 360, crop: [0, 0, 512, 640], visualScale: 1.05  },
-      { name: "11", src: "assets/fruit-11.png?v=1.4.2", r: 72, score: 560, crop: [0, 0, 640, 640], visualScale: 1.05  },
-      { name: "12", src: "assets/fruit-12.png?v=1.4.2", r: 80, score: 820, crop: [0, 0, 640, 640], visualScale: 1.04  },
-      { name: "13", src: "assets/fruit-13.png?v=1.4.2", r: 88, score: 1200, crop: [0, 0, 525, 640], visualScale: 1.04  },
-      { name: "14", src: "assets/fruit-14.png?v=1.4.2", r: 96, score: 1700, crop: [0, 0, 552, 640], visualScale: 1.03  },
-      { name: "15", src: "assets/fruit-15.png?v=1.4.2", r: 104, score: 2400, crop: [0, 0, 640, 640], visualScale: 1.03  },
-      { name: "16", src: "assets/fruit-16.png?v=1.4.2", r: 112, score: 3300, crop: [0, 0, 471, 640], visualScale: 1.02  }
+      { name: "01", src: "assets/fruit-01.png?v=1.4.4", r: 14, score: 2, crop: [0, 0, 640, 607], visualScale: 1.1  },
+      { name: "02", src: "assets/fruit-02.png?v=1.4.4", r: 18, score: 5, crop: [0, 0, 640, 640], visualScale: 1.1  },
+      { name: "03", src: "assets/fruit-03.png?v=1.4.4", r: 22, score: 10, crop: [0, 0, 640, 441], visualScale: 1.09  },
+      { name: "04", src: "assets/fruit-04.png?v=1.4.4", r: 27, score: 18, crop: [0, 0, 640, 582], visualScale: 1.08  },
+      { name: "05", src: "assets/fruit-05.png?v=1.4.4", r: 32, score: 32, crop: [0, 0, 563, 640], visualScale: 1.08, physicsScale: 0.86  },
+      { name: "06", src: "assets/fruit-06.png?v=1.4.4", r: 38, score: 55, crop: [0, 0, 640, 501], visualScale: 1.07  },
+      { name: "07", src: "assets/fruit-07.png?v=1.4.4", r: 44, score: 90, crop: [0, 0, 640, 576], visualScale: 1.07  },
+      { name: "08", src: "assets/fruit-08.png?v=1.4.4", r: 50, score: 145, crop: [0, 0, 640, 640], visualScale: 1.06  },
+      { name: "09", src: "assets/fruit-09.png?v=1.4.4", r: 57, score: 230, crop: [0, 0, 640, 640], visualScale: 1.06  },
+      { name: "10", src: "assets/fruit-10.png?v=1.4.4", r: 64, score: 360, crop: [0, 0, 512, 640], visualScale: 1.05  },
+      { name: "11", src: "assets/fruit-11.png?v=1.4.4", r: 72, score: 560, crop: [0, 0, 640, 640], visualScale: 1.05  },
+      { name: "12", src: "assets/fruit-12.png?v=1.4.4", r: 80, score: 820, crop: [0, 0, 640, 640], visualScale: 1.04  },
+      { name: "13", src: "assets/fruit-13.png?v=1.4.4", r: 88, score: 1200, crop: [0, 0, 525, 640], visualScale: 1.04  },
+      { name: "14", src: "assets/fruit-14.png?v=1.4.4", r: 96, score: 1700, crop: [0, 0, 552, 640], visualScale: 1.03  },
+      { name: "15", src: "assets/fruit-15.png?v=1.4.4", r: 104, score: 2400, crop: [0, 0, 640, 640], visualScale: 1.03  },
+      { name: "16", src: "assets/fruit-16.png?v=1.4.4", r: 112, score: 3300, crop: [0, 0, 471, 640], visualScale: 1.02  }
     ];
 
     const images = fruitTypes.map(type => {
@@ -1097,20 +1102,28 @@
       ui.restartMode.hidden = !visible;
     }
 
-    function openPauseMenu() {
+    function openPauseMenu(intent = "pause") {
       if (!state.running || state.gameOver) {
-        startGame();
+        state.pendingMode = state.mode;
+        ui.overlay.hidden = false;
+        ui.modalTitle.textContent = intent === "mode" ? "选择模式" : "合成大卜卜";
+        ui.start.textContent = "开始收获";
+        ui.share.textContent = "复制战绩";
+        setPauseButtons(false);
+        updateModeUi();
         return;
       }
       state.paused = true;
       state.pendingMode = state.activeMode;
       ui.overlay.hidden = false;
-      ui.modalTitle.textContent = "暂停菜单";
+      ui.modalTitle.textContent = intent === "mode" ? "切换模式" : "暂停菜单";
       ui.start.textContent = "换模式开新局";
       ui.share.textContent = "复制当前战绩";
       setPauseButtons(true);
       updateModeUi();
-      ui.modalText.textContent = "当前这局还没结束，换模式会重新开局。你可以继续本局、重新开始本模式，或选择一个模式开新局。";
+      ui.modalText.textContent = intent === "mode"
+        ? "当前这局还没结束，选择模式后点“换模式开新局”会重新开始；点“继续本局”会回到当前游戏。"
+        : "游戏已暂停。你可以继续本局、重新开始本模式，或选择一个模式开新局。";
       updateUi();
     }
 
@@ -1561,13 +1574,13 @@
 
     function fruitScale() {
       const cssWidth = canvas.clientWidth || W;
-      return clamp(cssWidth / 360, .94, 1.08);
+      return clamp(cssWidth / 360 * 1.5, 1.32, 1.62);
     }
 
     function radiusForLevel(level) {
       const boxWidth = W - WALL * 2;
       const scaled = fruitTypes[level].r * fruitScale();
-      if (isBubuLevel(level)) return Math.min(scaled, boxWidth * .18);
+      if (isBubuLevel(level)) return Math.min(scaled, boxWidth * .27);
       return Math.max(10, scaled);
     }
 
@@ -1772,6 +1785,7 @@
       if (!state.running || state.paused || state.gameOver) return;
       updateChallengePressure(dt);
       updateEvilFruits();
+      updatePendingBubus();
       updatePartyEnergy(dt);
       const subSteps = 3;
       const step = dt / subSteps;
@@ -1951,7 +1965,21 @@
           playMergeSound(nextLevel);
           vibrate(isBubuLevel(nextLevel) ? [30, 35, 55] : [18, 24, 28]);
           if (isBubuLevel(nextLevel)) {
-            harvestBubu(nx, ny, nextLevel);
+            const now = performance.now();
+            created.push({
+              id: state.id++,
+              level: nextLevel,
+              x: clamp(nx, WALL + radiusForLevel(nextLevel), W - WALL - radiusForLevel(nextLevel)),
+              y: Math.min(ny, FLOOR - radiusForLevel(nextLevel)),
+              vx: (a.vx + b.vx) * .1,
+              vy: -160,
+              r: radiusForLevel(nextLevel),
+              born: now,
+              mergeLock: 999,
+              pendingHarvest: true,
+              pendingHarvestAt: now + BUBU_HOLD_MS
+            });
+            toast(`${bubuRoundName(nextLevel)}出现！5秒后爆开！`);
           } else {
             created.push({
               id: state.id++,
@@ -2019,6 +2047,15 @@
       }
     }
 
+    function updatePendingBubus() {
+      const now = performance.now();
+      const ready = state.fruits.filter(f => f.pendingHarvest && now >= f.pendingHarvestAt);
+      if (!ready.length) return;
+      const readyIds = new Set(ready.map(f => f.id));
+      state.fruits = state.fruits.filter(f => !readyIds.has(f.id));
+      for (const f of ready) harvestBubu(f.x, f.y, f.level);
+    }
+
     function updateDanger(dt) {
       if (isChallenge() && !state.pressureUnlocked) {
         state.dangerTimer = 0;
@@ -2027,6 +2064,7 @@
       const now = performance.now();
       const dangerY = currentDangerY();
       const risky = state.fruits.some(f => {
+        if (f.pendingHarvest) return false;
         const oldEnough = now - f.born > 1400;
         const slow = Math.abs(f.vx) + Math.abs(f.vy) < 90;
         return oldEnough && slow && f.y - f.r < dangerY;
@@ -2242,38 +2280,45 @@
     function drawFruit(context, x, y, level, radius, alpha = 1, meta = {}) {
       const img = images[level];
       const type = fruitTypes[level];
+      let drawRadius = radius;
+      if (meta.pendingHarvest) {
+        const left = Math.max(0, meta.pendingHarvestAt - performance.now());
+        const grow = 1 - clamp(left / BUBU_GROW_MS, 0, 1);
+        const pulse = Math.sin(performance.now() / 85) * .025;
+        drawRadius = radius * (1.08 + grow * .52 + pulse);
+      }
       context.save();
       context.globalAlpha = alpha;
       context.imageSmoothingEnabled = false;
       context.fillStyle = "rgba(42,22,11,.22)";
       context.beginPath();
-      context.ellipse(x + radius * .1, y + radius * .86, radius * .74, radius * .18, 0, 0, Math.PI * 2);
+      context.ellipse(x + drawRadius * .1, y + drawRadius * .86, drawRadius * .74, drawRadius * .18, 0, 0, Math.PI * 2);
       context.fill();
 
       if (img.complete && img.naturalWidth) {
         const crop = type.crop || [0, 0, img.naturalWidth, img.naturalHeight];
-        const visual = getVisualSize(level, radius);
+        const visual = getVisualSize(level, drawRadius);
         const dw = visual.w;
         const dh = visual.h;
         context.drawImage(img, crop[0], crop[1], crop[2], crop[3], x - dw / 2, y - dh / 2, dw, dh);
       } else {
         context.fillStyle = "#ffe66f";
-        context.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+        context.fillRect(x - drawRadius, y - drawRadius, drawRadius * 2, drawRadius * 2);
       }
       if (meta.evil) {
         context.strokeStyle = "#5b1c72";
-        context.lineWidth = Math.max(3, radius * .1);
+        context.lineWidth = Math.max(3, drawRadius * .1);
         context.beginPath();
-        context.arc(x, y, radius * 1.04, 0, Math.PI * 2);
+        context.arc(x, y, drawRadius * 1.04, 0, Math.PI * 2);
         context.stroke();
         context.fillStyle = "#fff4c3";
-        context.font = `900 ${Math.max(18, radius * .78)}px Microsoft YaHei, sans-serif`;
+        context.font = `900 ${Math.max(18, drawRadius * .78)}px Microsoft YaHei, sans-serif`;
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.strokeStyle = "#5b1c72";
         context.lineWidth = 4;
-        context.strokeText("?", x, y + radius * .04);
-        context.fillText("?", x, y + radius * .04);
+        context.strokeText("?", x, y + drawRadius * .04);
+        context.fillText("?", x, y + drawRadius * .04);
       }
       context.restore();
     }
@@ -2469,7 +2514,8 @@
       playMoveSound(state.aimX);
       vibrate(6);
     });
-    ui.restart.addEventListener("click", openPauseMenu);
+    ui.modeMenu.addEventListener("click", () => openPauseMenu("mode"));
+    ui.restart.addEventListener("click", () => openPauseMenu("pause"));
     ui.continue.addEventListener("click", continueGame);
     ui.restartMode.addEventListener("click", restartCurrentMode);
     ui.start.addEventListener("click", () => {
@@ -2536,6 +2582,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
