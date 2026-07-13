@@ -923,24 +923,25 @@
     const EVIL_RADIUS_MIN = 20;
     const EVIL_RADIUS_MAX = 28;
     const EVIL_PREVIEW_RADIUS = 27;
+    const PHYSICS_RADIUS_SCALE = .82;
     const gravity = 980;
     const fruitTypes = [
-      { name: "01", src: "assets/fruit-01.png?v=1.4.4", r: 14, score: 2, crop: [0, 0, 640, 607], visualScale: 1.1  },
-      { name: "02", src: "assets/fruit-02.png?v=1.4.4", r: 18, score: 5, crop: [0, 0, 640, 640], visualScale: 1.1  },
-      { name: "03", src: "assets/fruit-03.png?v=1.4.4", r: 22, score: 10, crop: [0, 0, 640, 441], visualScale: 1.09  },
-      { name: "04", src: "assets/fruit-04.png?v=1.4.4", r: 27, score: 18, crop: [0, 0, 640, 582], visualScale: 1.08  },
-      { name: "05", src: "assets/fruit-05.png?v=1.4.4", r: 32, score: 32, crop: [0, 0, 563, 640], visualScale: 1.08, physicsScale: 0.86  },
-      { name: "06", src: "assets/fruit-06.png?v=1.4.4", r: 38, score: 55, crop: [0, 0, 640, 501], visualScale: 1.07  },
-      { name: "07", src: "assets/fruit-07.png?v=1.4.4", r: 44, score: 90, crop: [0, 0, 640, 576], visualScale: 1.07  },
-      { name: "08", src: "assets/fruit-08.png?v=1.4.4", r: 50, score: 145, crop: [0, 0, 640, 640], visualScale: 1.06  },
-      { name: "09", src: "assets/fruit-09.png?v=1.4.4", r: 57, score: 230, crop: [0, 0, 640, 640], visualScale: 1.06  },
-      { name: "10", src: "assets/fruit-10.png?v=1.4.4", r: 64, score: 360, crop: [0, 0, 512, 640], visualScale: 1.05  },
-      { name: "11", src: "assets/fruit-11.png?v=1.4.4", r: 72, score: 560, crop: [0, 0, 640, 640], visualScale: 1.05  },
-      { name: "12", src: "assets/fruit-12.png?v=1.4.4", r: 80, score: 820, crop: [0, 0, 640, 640], visualScale: 1.04  },
-      { name: "13", src: "assets/fruit-13.png?v=1.4.4", r: 88, score: 1200, crop: [0, 0, 525, 640], visualScale: 1.04  },
-      { name: "14", src: "assets/fruit-14.png?v=1.4.4", r: 96, score: 1700, crop: [0, 0, 552, 640], visualScale: 1.03  },
-      { name: "15", src: "assets/fruit-15.png?v=1.4.4", r: 104, score: 2400, crop: [0, 0, 640, 640], visualScale: 1.03  },
-      { name: "16", src: "assets/fruit-16.png?v=1.4.4", r: 112, score: 3300, crop: [0, 0, 471, 640], visualScale: 1.02  }
+      { name: "01", src: "assets/fruit-01.png?v=1.4.5", r: 14, score: 2, crop: [0, 0, 640, 607], visualScale: 1.1  },
+      { name: "02", src: "assets/fruit-02.png?v=1.4.5", r: 18, score: 5, crop: [0, 0, 640, 640], visualScale: 1.1  },
+      { name: "03", src: "assets/fruit-03.png?v=1.4.5", r: 22, score: 10, crop: [0, 0, 640, 441], visualScale: 1.09  },
+      { name: "04", src: "assets/fruit-04.png?v=1.4.5", r: 27, score: 18, crop: [0, 0, 640, 582], visualScale: 1.08  },
+      { name: "05", src: "assets/fruit-05.png?v=1.4.5", r: 32, score: 32, crop: [0, 0, 563, 640], visualScale: 1.08, physicsScale: 0.86  },
+      { name: "06", src: "assets/fruit-06.png?v=1.4.5", r: 38, score: 55, crop: [0, 0, 640, 501], visualScale: 1.07  },
+      { name: "07", src: "assets/fruit-07.png?v=1.4.5", r: 44, score: 90, crop: [0, 0, 640, 576], visualScale: 1.07  },
+      { name: "08", src: "assets/fruit-08.png?v=1.4.5", r: 50, score: 145, crop: [0, 0, 640, 640], visualScale: 1.06  },
+      { name: "09", src: "assets/fruit-09.png?v=1.4.5", r: 57, score: 230, crop: [0, 0, 640, 640], visualScale: 1.06  },
+      { name: "10", src: "assets/fruit-10.png?v=1.4.5", r: 64, score: 360, crop: [0, 0, 512, 640], visualScale: 1.05  },
+      { name: "11", src: "assets/fruit-11.png?v=1.4.5", r: 72, score: 560, crop: [0, 0, 640, 640], visualScale: 1.05  },
+      { name: "12", src: "assets/fruit-12.png?v=1.4.5", r: 80, score: 820, crop: [0, 0, 640, 640], visualScale: 1.04  },
+      { name: "13", src: "assets/fruit-13.png?v=1.4.5", r: 88, score: 1200, crop: [0, 0, 525, 640], visualScale: 1.04  },
+      { name: "14", src: "assets/fruit-14.png?v=1.4.5", r: 96, score: 1700, crop: [0, 0, 552, 640], visualScale: 1.03  },
+      { name: "15", src: "assets/fruit-15.png?v=1.4.5", r: 104, score: 2400, crop: [0, 0, 640, 640], visualScale: 1.03  },
+      { name: "16", src: "assets/fruit-16.png?v=1.4.5", r: 112, score: 3300, crop: [0, 0, 471, 640], visualScale: 1.02  }
     ];
 
     const images = fruitTypes.map(type => {
@@ -1574,13 +1575,13 @@
 
     function fruitScale() {
       const cssWidth = canvas.clientWidth || W;
-      return clamp(cssWidth / 360 * 1.5, 1.32, 1.62);
+      return clamp(cssWidth / 360 * 1.22, 1.08, 1.32);
     }
 
     function radiusForLevel(level) {
       const boxWidth = W - WALL * 2;
       const scaled = fruitTypes[level].r * fruitScale();
-      if (isBubuLevel(level)) return Math.min(scaled, boxWidth * .27);
+      if (isBubuLevel(level)) return Math.min(scaled, boxWidth * .22);
       return Math.max(10, scaled);
     }
 
@@ -1802,6 +1803,7 @@
 
     function integrate(dt) {
       for (const f of state.fruits) {
+        const pr = getPhysicsRadius(f);
         f.mergeLock = Math.max(0, f.mergeLock - dt);
         f.vy += gravity * dt;
         f.x += f.vx * dt;
@@ -1809,16 +1811,16 @@
         f.vx *= .995;
         f.vy *= .999;
 
-        if (f.x - f.r < WALL) {
-          f.x = WALL + f.r;
+        if (f.x - pr < WALL) {
+          f.x = WALL + pr;
           f.vx = Math.abs(f.vx) * .45;
         }
-        if (f.x + f.r > W - WALL) {
-          f.x = W - WALL - f.r;
+        if (f.x + pr > W - WALL) {
+          f.x = W - WALL - pr;
           f.vx = -Math.abs(f.vx) * .45;
         }
-        if (f.y + f.r > FLOOR) {
-          f.y = FLOOR - f.r;
+        if (f.y + pr > FLOOR) {
+          f.y = FLOOR - pr;
           f.vy = -Math.abs(f.vy) * .22;
           f.vx *= .94;
         }
@@ -1827,7 +1829,7 @@
 
     function getPhysicsRadius(fruit) {
       const type = fruitTypes[fruit.level];
-      return fruit.r * (type.physicsScale || 1);
+      return fruit.r * PHYSICS_RADIUS_SCALE * (type.physicsScale || 1);
     }
 
     function solveCollisions() {
@@ -2089,8 +2091,8 @@
     function visuallyTouches(a, b) {
       const av = getVisualSize(a.level, a.r);
       const bv = getVisualSize(b.level, b.r);
-      const rx = Math.max(1, (av.w + bv.w) * .54);
-      const ry = Math.max(1, (av.h + bv.h) * .54);
+      const rx = Math.max(1, (av.w + bv.w) * .6);
+      const ry = Math.max(1, (av.h + bv.h) * .6);
       const nx = (a.x - b.x) / rx;
       const ny = (a.y - b.y) / ry;
       return nx * nx + ny * ny <= 1;
@@ -2108,7 +2110,7 @@
 
       const av = getVisualSize(a.level, a.r);
       const bv = getVisualSize(b.level, b.r);
-      const closeEnough = dx <= touchRadius * (isParty() ? 1.52 : 1.38) && dy <= Math.max(av.h, bv.h) * (isParty() ? .72 : .62);
+      const closeEnough = dx <= touchRadius * (isParty() ? 1.62 : 1.48) && dy <= Math.max(av.h, bv.h) * (isParty() ? .78 : .68);
       return closeEnough;
     }
 
@@ -2582,6 +2584,7 @@
   </script>
 </body>
 </html>
+
 
 
 
