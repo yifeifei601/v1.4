@@ -394,6 +394,56 @@
       box-shadow: 2px 2px 0 rgba(42, 22, 11, .55);
     }
 
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0 auto 14px;
+      max-width: 580px;
+    }
+
+    .album-item {
+      border: 3px solid var(--ink);
+      border-radius: 6px;
+      padding: 8px 6px;
+      background: #ffe6a6;
+      box-shadow: 2px 2px 0 rgba(42, 22, 11, .55);
+      text-align: center;
+      color: #5c3c1e;
+      font-size: 12px;
+      font-weight: 1000;
+    }
+
+    .album-item img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 5px;
+      image-rendering: auto;
+    }
+
+    .album-item button {
+      width: 100%;
+      margin-top: 6px;
+      border: 2px solid var(--ink);
+      border-radius: 5px;
+      padding: 5px 4px;
+      color: #fff4c3;
+      background: linear-gradient(180deg, #65c85c, #2f8f3f);
+      box-shadow: 2px 2px 0 var(--ink);
+      font-size: 12px;
+      font-weight: 1000;
+      text-shadow: 1px 1px 0 var(--ink);
+      cursor: pointer;
+    }
+
+    .album-item button:disabled {
+      opacity: .45;
+      cursor: default;
+      background: linear-gradient(180deg, #a97945, #70411e);
+    }
+
     .share-row {
       display: flex;
       justify-content: center;
@@ -821,6 +871,7 @@
                 <button class="btn green" id="dropBtn">投放</button>
                 <button class="btn" id="rightBtn">右移</button>
                 <button class="btn primary" id="partyBtn">派对一下</button>
+                <button class="btn" id="albumBtn">相册</button>
                 <button class="btn" id="modeMenuBtn">换模式</button>
                 <button class="btn" id="restartBtn">暂停</button>
               </div>
@@ -887,6 +938,7 @@
       easyMode: document.getElementById("easyModeBtn"),
       challengeMode: document.getElementById("challengeModeBtn"),
       partyMode: document.getElementById("partyModeBtn"),
+      modeRow: document.querySelector(".mode-row"),
       recordSummary: document.getElementById("recordSummary"),
       continue: document.getElementById("continueBtn"),
       restartMode: document.getElementById("restartModeBtn"),
@@ -896,6 +948,7 @@
       drop: document.getElementById("dropBtn"),
       right: document.getElementById("rightBtn"),
       party: document.getElementById("partyBtn"),
+      album: document.getElementById("albumBtn"),
       modeMenu: document.getElementById("modeMenuBtn"),
       restart: document.getElementById("restartBtn"),
       music: document.getElementById("musicBtn"),
@@ -919,30 +972,53 @@
     const BUBU_HOLD_MS = 5000;
     const BUBU_GROW_MS = 900;
     const PRESSURE_UNLOCK_LEVEL = 5;
-    const EVIL_LEVEL = 11;
+    const EVIL_LEVEL = 15;
     const EVIL_RADIUS_MIN = 20;
     const EVIL_RADIUS_MAX = 28;
     const EVIL_PREVIEW_RADIUS = 27;
-    const PHYSICS_RADIUS_SCALE = .82;
+    const PHYSICS_RADIUS_SCALE = .95;
+    const MERGE_TOUCH_SCALE = .46;
+    const PARTY_MERGE_TOUCH_SCALE = .49;
     const PARTY_BUBU_SCORE_STEP = .08;
+    const STICKY_MS = 10000;
+    const ANTIGRAVITY_MS = 3000;
+    const VISUAL_TARGET_BOXES = [32, 40, 49, 59, 70, 82, 95, 110, 112, 142, 158, 174, 174, 174, 174, 174];
+    const BODY_CROPS = [
+      [50, 41, 360, 355],
+      [62, 42, 326, 359],
+      [29, 48, 390, 240],
+      [46, 43, 346, 307],
+      [63, 13, 268, 408],
+      [55, 31, 331, 284],
+      [36, 39, 377, 324],
+      [49, 49, 257, 348],
+      [59, 35, 326, 377],
+      [66, 59, 346, 359],
+      [90, 22, 177, 391],
+      [76, 21, 306, 398],
+      [48, 21, 264, 414],
+      [21, 25, 339, 397],
+      [95, 46, 262, 362],
+      [74, 35, 290, 372]
+    ];
     const gravity = 980;
     const fruitTypes = [
-      { name: "01", src: "assets/fruit-01.png?v=1.4.6", r: 14, score: 2, crop: [0, 0, 640, 607], visualScale: 1.1  },
-      { name: "02", src: "assets/fruit-02.png?v=1.4.6", r: 18, score: 5, crop: [0, 0, 640, 640], visualScale: 1.1  },
-      { name: "03", src: "assets/fruit-03.png?v=1.4.6", r: 22, score: 10, crop: [0, 0, 640, 441], visualScale: 1.09  },
-      { name: "04", src: "assets/fruit-04.png?v=1.4.6", r: 27, score: 18, crop: [0, 0, 640, 582], visualScale: 1.08  },
-      { name: "05", src: "assets/fruit-05.png?v=1.4.6", r: 32, score: 32, crop: [0, 0, 563, 640], visualScale: 1.08, physicsScale: 0.86  },
-      { name: "06", src: "assets/fruit-06.png?v=1.4.6", r: 38, score: 55, crop: [0, 0, 640, 501], visualScale: 1.07  },
-      { name: "07", src: "assets/fruit-07.png?v=1.4.6", r: 44, score: 90, crop: [0, 0, 640, 576], visualScale: 1.07  },
-      { name: "08", src: "assets/fruit-08.png?v=1.4.6", r: 50, score: 145, crop: [0, 0, 640, 640], visualScale: 1.06  },
-      { name: "09", src: "assets/fruit-09.png?v=1.4.6", r: 57, score: 230, crop: [0, 0, 640, 640], visualScale: 1.06  },
-      { name: "10", src: "assets/fruit-10.png?v=1.4.6", r: 64, score: 360, crop: [0, 0, 512, 640], visualScale: 1.05  },
-      { name: "11", src: "assets/fruit-11.png?v=1.4.6", r: 72, score: 560, crop: [0, 0, 640, 640], visualScale: 1.05  },
-      { name: "12", src: "assets/fruit-12.png?v=1.4.6", r: 80, score: 820, crop: [0, 0, 640, 640], visualScale: 1.04  },
-      { name: "13", src: "assets/fruit-13.png?v=1.4.6", r: 88, score: 1200, crop: [0, 0, 525, 640], visualScale: 1.04  },
-      { name: "14", src: "assets/fruit-14.png?v=1.4.6", r: 96, score: 1700, crop: [0, 0, 552, 640], visualScale: 1.03  },
-      { name: "15", src: "assets/fruit-15.png?v=1.4.6", r: 104, score: 2400, crop: [0, 0, 640, 640], visualScale: 1.03  },
-      { name: "16", src: "assets/fruit-16.png?v=1.4.6", r: 112, score: 3300, crop: [0, 0, 471, 640], visualScale: 1.02  }
+      { name: "01", src: "assets/fruit-01.png?v=1.5.1-opt", r: 14, score: 2, crop: [0, 0, 640, 607], visualScale: 1.1  },
+      { name: "02", src: "assets/fruit-02.png?v=1.5.1-opt", r: 18, score: 5, crop: [0, 0, 640, 640], visualScale: 1.1  },
+      { name: "03", src: "assets/fruit-03.png?v=1.5.1-opt", r: 22, score: 10, crop: [0, 0, 640, 441], visualScale: 1.09  },
+      { name: "04", src: "assets/fruit-04.png?v=1.5.1-opt", r: 27, score: 18, crop: [0, 0, 640, 582], visualScale: 1.08  },
+      { name: "05", src: "assets/fruit-05.png?v=1.5.1-opt", r: 32, score: 32, crop: [0, 0, 563, 640], visualScale: 1.08  },
+      { name: "06", src: "assets/fruit-06.png?v=1.5.1-opt", r: 38, score: 55, crop: [0, 0, 640, 501], visualScale: 1.07  },
+      { name: "07", src: "assets/fruit-07.png?v=1.5.1-opt", r: 44, score: 90, crop: [0, 0, 640, 576], visualScale: 1.07  },
+      { name: "08", src: "assets/fruit-08.png?v=1.5.1-opt", r: 50, score: 145, crop: [0, 0, 640, 640], visualScale: 1.06  },
+      { name: "09", src: "assets/fruit-09.png?v=1.5.1-opt", r: 57, score: 230, crop: [0, 0, 640, 640], visualScale: 1.06  },
+      { name: "10", src: "assets/fruit-10.png?v=1.5.1-opt", r: 64, score: 360, crop: [0, 0, 512, 640], visualScale: 1.05  },
+      { name: "11", src: "assets/fruit-11.png?v=1.5.1-opt", r: 72, score: 560, crop: [0, 0, 640, 640], visualScale: 1.05  },
+      { name: "12", src: "assets/fruit-12.png?v=1.5.1-opt", r: 80, score: 820, crop: [0, 0, 640, 640], visualScale: 1.04  },
+      { name: "13", src: "assets/fruit-13.png?v=1.5.1-opt", r: 88, score: 1200, crop: [0, 0, 525, 640], visualScale: 1.04  },
+      { name: "14", src: "assets/fruit-14.png?v=1.5.1-opt", r: 96, score: 1700, crop: [0, 0, 552, 640], visualScale: 1.03  },
+      { name: "15", src: "assets/fruit-15.png?v=1.5.1-opt", r: 104, score: 2400, crop: [0, 0, 640, 640], visualScale: 1.03  },
+      { name: "16", src: "assets/fruit-16.png?v=1.5.1-opt", r: 112, score: 3300, crop: [0, 0, 471, 640], visualScale: 1.02  }
     ];
 
     const images = fruitTypes.map(type => {
@@ -977,6 +1053,11 @@
       partyEnergy: 0,
       partyHeat: 0,
       partyAlbum: {},
+      antiGravityUntil: 0,
+      partyQuest: null,
+      springPad: null,
+      panWindowUntil: 0,
+      panMergeCount: 0,
       partyMotionEnabled: false,
       partyMotionListener: false,
       shareReviveUsed: false,
@@ -1025,6 +1106,10 @@
 
     function isParty() {
       return state.mode === "party";
+    }
+
+    function isEasy() {
+      return state.mode === "easy";
     }
 
     function bubuTargetLevel() {
@@ -1082,16 +1167,17 @@
       ui.challengeMode.classList.toggle("active", shownMode === "challenge");
       ui.partyMode.classList.toggle("active", shownMode === "party");
       if (shownMode === "challenge") {
-        ui.modalText.textContent = "挑战模式会随分数提高掉落等级，压力线会慢慢下降；连续合成、合成高级果实可以把压力线顶回去。偶尔会掉邪恶卜，几秒后才会变成普通果。";
+        ui.modalText.textContent = "挑战模式保留 12-16 爆炸清场，用来救命和冲分；分数越高越紧张，连续合成和高级果能把压力线顶回去。";
       } else if (shownMode === "party") {
-        ui.modalText.textContent = "派对时间是盲盒掉落：可能一次掉多个、从奇怪位置斜飞进来，也可能掉高阶果或邪恶卜。点击“派对一下”或晃动手机，让果实翻滚、碰撞、自己合成。";
+        ui.modalText.textContent = "派对时间主打有目标地颠锅：快递箱会开出彩带贴贴、箱底弹簧、清爽泡泡等小任务。12-16 留场/相册/展示，适合发疯和截图。";
       } else {
-        ui.modalText.textContent = "普通模式适合爽玩和熟悉手感：固定警戒线，不掉邪恶卜。先冲 12 级大卜卜，之后会逐轮进化到 13-16。";
+        ui.modalText.textContent = "普通模式一路合成到 16，不爆炸清场。满级大卜卜会收进丰收仓，适合慢慢合成、冲最高收获数。";
       }
       updateRecordSummary();
     }
 
     function updateRecordSummary() {
+      restoreRecordGrid();
       ui.recordSummary.innerHTML = [
         `<span>普通最高 ${records.easyBest}</span>`,
         `<span>挑战最高 ${records.challengeBest}</span>`,
@@ -1104,6 +1190,11 @@
     function setPauseButtons(visible) {
       ui.continue.hidden = !visible;
       ui.restartMode.hidden = !visible;
+      ui.continue.textContent = "继续本局";
+      ui.restartMode.textContent = "重新开始本模式";
+      ui.start.hidden = false;
+      ui.share.hidden = false;
+      ui.modeRow.hidden = false;
     }
 
     function openPauseMenu(intent = "pause") {
@@ -1131,6 +1222,49 @@
       updateUi();
     }
 
+    function openAlbum() {
+      if (!isParty()) {
+        toast("派对时间才有卜卜相册。");
+        return;
+      }
+      if (!state.running || state.gameOver) {
+        toast("先开始一局派对时间。");
+        return;
+      }
+      state.paused = true;
+      ui.overlay.hidden = false;
+      ui.modeRow.hidden = true;
+      ui.modalTitle.textContent = "卜卜相册";
+      ui.modalText.textContent = "把相册里的大卜卜放回箱子里，摆好队形一起派对一下。放出来的是展示卜卜，不会合成、不会爆炸，也不会重复加分。";
+      ui.continue.hidden = false;
+      ui.continue.textContent = "继续派对";
+      ui.restartMode.hidden = true;
+      ui.start.hidden = true;
+      ui.share.hidden = false;
+      ui.share.textContent = "复制派对战绩";
+      renderAlbum();
+      updateUi();
+    }
+
+    function renderAlbum() {
+      ui.recordSummary.className = "album-grid";
+      ui.recordSummary.innerHTML = Array.from({ length: BUBU_FINAL_LEVEL - BUBU_START_LEVEL + 1 }, (_, i) => {
+        const level = BUBU_START_LEVEL + i;
+        const count = state.partyAlbum[level] || 0;
+        const disabled = count <= 0 ? "disabled" : "";
+        return `<div class="album-item">
+          <img src="${fruitTypes[level].src}" alt="${fruitTypes[level].name}级大卜卜">
+          <b>${fruitTypes[level].name}级</b>
+          <span>x${count}</span>
+          <button type="button" data-release-bubu="${level}" ${disabled}>放出来</button>
+        </div>`;
+      }).join("");
+    }
+
+    function restoreRecordGrid() {
+      ui.recordSummary.className = "record-grid";
+    }
+
     function continueGame() {
       if (!state.paused) return;
       state.pendingMode = "";
@@ -1138,6 +1272,7 @@
       ui.overlay.hidden = true;
       ui.share.textContent = "复制战绩";
       setPauseButtons(false);
+      restoreRecordGrid();
       updateModeUi();
       updateUi();
     }
@@ -1505,6 +1640,11 @@
       state.partyEnergy = 0;
       state.partyHeat = 0;
       state.partyAlbum = {};
+      state.antiGravityUntil = 0;
+      state.partyQuest = null;
+      state.springPad = null;
+      state.panWindowUntil = 0;
+      state.panMergeCount = 0;
       state.shareReviveUsed = false;
       state.awaitingRevive = false;
       state.dropCount = 0;
@@ -1523,7 +1663,9 @@
       if (isParty()) requestPartyMotionAccess();
       logLine(isParty()
         ? `${modeName()}开局：大卜卜会留在场上，点它可以收进相册。`
-        : `${modeName()}开局：先冲 ${bubuRoundName()}，爆开后继续进化。`);
+        : (isEasy()
+          ? `${modeName()}开局：一路合到 16，满级大卜卜会收进丰收仓。`
+          : `${modeName()}开局：先冲 ${bubuRoundName()}，爆开后继续进化。`));
       updateUi();
       drawNext();
     }
@@ -1568,16 +1710,8 @@
     }
 
     function evilRadius() {
-      let baseRadius;
-      if (isParty()) {
-        const level = clamp(partyMaxDropLevel() + 1, 3, BUBU_START_LEVEL - 1);
-        baseRadius = fruitTypes[level].r;
-      } else {
-        const range = dropLevelRange();
-        const level = clamp(range.max + 1, 3, BUBU_START_LEVEL - 1);
-        baseRadius = fruitTypes[level].r;
-      }
-      return clamp(baseRadius * .72, EVIL_RADIUS_MIN, EVIL_RADIUS_MAX);
+      const visual = (targetVisualBox(BUBU_START_LEVEL) + targetVisualBox(BUBU_START_LEVEL + 1)) / 2;
+      return clamp(visual / 2.05, EVIL_RADIUS_MIN, EVIL_RADIUS_MAX);
     }
 
     function fruitScale() {
@@ -1585,11 +1719,16 @@
       return clamp(cssWidth / 360 * 1.52, 1.24, 1.58);
     }
 
+    function visualBoxScale() {
+      return clamp(fruitScale() / 1.52, .9, 1.06);
+    }
+
+    function targetVisualBox(level) {
+      return VISUAL_TARGET_BOXES[level] * visualBoxScale();
+    }
+
     function radiusForLevel(level) {
-      const boxWidth = W - WALL * 2;
-      const scaled = fruitTypes[level].r * fruitScale();
-      if (isBubuLevel(level)) return Math.min(scaled, boxWidth * .15);
-      return Math.max(10, scaled);
+      return Math.max(10, targetVisualBox(level) / 2.05);
     }
 
     function partyBubuCount() {
@@ -1650,69 +1789,112 @@
         vy: options.vy ?? 0,
         r: radius,
         born: performance.now(),
-        mergeLock: options.mergeLock ?? 0
+        mergeLock: options.mergeLock ?? 0,
+        special: options.special || "",
+        triggerAt: options.triggerAt || 0,
+        stickyUntil: 0
       });
     }
 
-    function partyDropOrigin(radius, index, total) {
-      const roll = Math.random();
-      if (roll < .34) {
+    function partyDropOrigin(radius, index, total, kind = "normal") {
+      const heat = state.partyHeat / 100;
+      const chaosChance = kind === "normal" ? .16 + heat * .08 : .08;
+      const spread = (index - (total - 1) / 2) * (kind === "sprinkle" ? rand(28, 46) : rand(24, 38));
+      const centeredDrop = () => ({
+        x: clamp(state.aimX + spread + rand(-22, 22), WALL + radius, W - WALL - radius),
+        y: SPAWN_Y + rand(-18, 6),
+        vx: rand(-70, 70) + spread * .8,
+        vy: rand(-35, 25)
+      });
+
+      if (kind === "sticky" || kind === "mystery") {
         return {
-          x: clamp(state.aimX + rand(-54, 54), WALL + radius, W - WALL - radius),
-          y: SPAWN_Y + rand(-16, 8),
-          vx: rand(-120, 120),
-          vy: rand(-40, 35)
+          x: clamp(state.aimX + rand(-34, 34), WALL + radius, W - WALL - radius),
+          y: SPAWN_Y + rand(-14, 6),
+          vx: rand(-55, 55),
+          vy: rand(-30, 20)
         };
       }
-      if (roll < .58) {
+
+      if (kind === "high") {
+        return {
+          x: clamp(state.aimX + rand(-30, 30), WALL + radius, W - WALL - radius),
+          y: SPAWN_Y + rand(-18, 8),
+          vx: rand(-60, 60),
+          vy: rand(-38, 22)
+        };
+      }
+
+      if (kind === "sprinkle") {
+        return {
+          x: clamp(state.aimX + spread + rand(-32, 32), WALL + radius, W - WALL - radius),
+          y: SPAWN_Y - rand(0, 30),
+          vx: rand(-110, 110) + spread,
+          vy: rand(-70, 15)
+        };
+      }
+
+      if (Math.random() > chaosChance) return centeredDrop();
+
+      const roll = Math.random();
+      if (roll < .55) {
         const fromLeft = Math.random() < .5;
         return {
           x: fromLeft ? WALL + radius : W - WALL - radius,
-          y: rand(74, 170),
-          vx: (fromLeft ? 1 : -1) * rand(190, 390),
-          vy: rand(-80, 60)
+          y: rand(80, 158),
+          vx: (fromLeft ? 1 : -1) * rand(170, 300),
+          vy: rand(-60, 45)
         };
       }
-      if (roll < .78) {
-        return {
-          x: clamp(W / 2 + rand(-110, 110), WALL + radius, W - WALL - radius),
-          y: rand(38, 118),
-          vx: rand(-180, 180),
-          vy: rand(-60, 50)
-        };
-      }
-      const spread = (index - (total - 1) / 2) * rand(34, 54);
       return {
-        x: clamp(W / 2 + spread + rand(-26, 26), WALL + radius, W - WALL - radius),
-        y: SPAWN_Y - rand(0, 26),
-        vx: rand(-170, 170),
-        vy: rand(-90, 20)
+        x: clamp(state.aimX + rand(-90, 90), WALL + radius, W - WALL - radius),
+        y: rand(42, 108),
+        vx: rand(-150, 150),
+        vy: rand(-60, 40)
       };
     }
 
     function partyDropPlan() {
       const roll = Math.random();
       const heat = state.partyHeat / 100;
-      if (roll < .50 - heat * .12) return { kind: "normal", count: 1, label: "派对单发" };
-      if (roll < .74 - heat * .06) return { kind: "normal", count: 2, label: "双响掉落" };
-      if (roll < .86) return { kind: "sprinkle", count: randInt(3, 5 + Math.floor(heat * 2)), label: "大撒花" };
-      if (roll < .95 + heat * .03) return { kind: "high", count: heat > .65 && Math.random() < .35 ? 2 : 1, label: "高阶惊喜" };
-      return { kind: "evil", count: 1, label: "邪恶卜乱入" };
+      if (roll < .60 - heat * .08) return { kind: "normal", count: 1, label: "定点投放" };
+      if (roll < .75 - heat * .04) return { kind: "normal", count: 2, label: "双响定点" };
+      if (roll < .85) return { kind: "high", count: heat > .7 && Math.random() < .18 ? 2 : 1, label: "高阶定点" };
+      if (roll < .91) return { kind: "sprinkle", count: randInt(3, 4 + Math.floor(heat * 2)), label: "小果雨" };
+      if (roll < .96) return { kind: "sticky", count: 1, label: "邪恶卜盲盒" };
+      return { kind: "mystery", count: 1, label: "神秘快递箱" };
     }
 
     function dropPartyFruit() {
       const plan = partyDropPlan();
       state.canDrop = false;
+      if (plan.kind === "antigravity") {
+        triggerAntiGravity();
+        state.dropCount += 1;
+        rollNextDrop();
+        setTimeout(() => { state.canDrop = true; }, 620);
+        drawNext();
+        return;
+      }
       for (let i = 0; i < plan.count; i += 1) {
         setTimeout(() => {
           if (!state.running || state.gameOver || !isParty()) return;
-          const level = plan.kind === "evil" ? EVIL_LEVEL : randomPartyLevel(plan.kind);
-          const isEvil = plan.kind === "evil";
-          const radius = isEvil ? evilRadius() : radiusForLevel(level);
-          const origin = partyDropOrigin(radius, i, plan.count);
-          spawnFruit(level, { ...origin, evil: isEvil, r: radius, mergeLock: .04 });
+          const isSpecial = plan.kind === "sticky" || plan.kind === "mystery";
+          const level = isSpecial ? EVIL_LEVEL : randomPartyLevel(plan.kind);
+          const isEvil = plan.kind === "sticky";
+          const radius = isSpecial ? evilRadius() : radiusForLevel(level);
+          const origin = partyDropOrigin(radius, i, plan.count, plan.kind);
+          spawnFruit(level, {
+            ...origin,
+            evil: isEvil,
+            r: radius,
+            mergeLock: isSpecial ? 999 : .04,
+            special: plan.kind === "sticky" ? "sticky" : (plan.kind === "mystery" ? "mystery" : ""),
+            triggerAt: performance.now() + 3000
+          });
           burst(origin.x, origin.y + 8, 8 + Math.min(18, level * 2));
-          if (isEvil) toast("派对乱入：邪恶卜！");
+          if (plan.kind === "sticky") toast("黏黏卜来了，别被黏住！");
+          if (plan.kind === "mystery") toast("神秘快递箱来了！");
           playDropSound();
         }, i * 105);
       }
@@ -1724,6 +1906,168 @@
       vibrate(plan.count > 1 ? [16, 24, 16] : 18);
       addPartyHeat(plan.count * 3 + (plan.kind === "high" ? 6 : 0) + (plan.kind === "evil" ? 10 : 0));
       toast(`${plan.label}！`);
+    }
+
+    function triggerAntiGravity() {
+      state.antiGravityUntil = performance.now() + ANTIGRAVITY_MS;
+      state.partyEnergy = Math.min(1.2, state.partyEnergy + .45);
+      state.shake = 12;
+      addPartyHeat(14);
+      playPartySound(1.35);
+      vibrate([18, 24, 18, 24, 18]);
+      burst(W / 2, FLOOR - 90, 48);
+      toast("反重力 3 秒！");
+      logLine("派对事件：反重力 3 秒，果实飘起来了。");
+    }
+
+    function triggerStickyAt(x, y) {
+      const now = performance.now();
+      let stuck = 0;
+      for (const f of state.fruits) {
+        if (f.special || f.pendingHarvest || f.pendingBank || f.partyBubu) continue;
+        if (Math.hypot(f.x - x, f.y - y) > 122 + f.r) continue;
+        f.stickyUntil = now + STICKY_MS;
+        f.mergeLock = Math.max(f.mergeLock, STICKY_MS / 1000);
+        f.vx = 0;
+        f.vy = 0;
+        stuck += 1;
+      }
+      state.shake = 10;
+      addPartyHeat(10);
+      burst(x, y, 36);
+      playEvilTransformSound();
+      vibrate([30, 40, 30]);
+      toast(`黏黏卜黏住 ${stuck} 个果实！`);
+      logLine(`派对事件：黏黏卜让 ${stuck} 个果实 10 秒不能合成、不能晃动。`);
+    }
+
+    function triggerMysteryAt(x, y) {
+      const roll = Math.random();
+      burst(x, y, 46);
+      if (roll < .26) {
+        startRibbonQuest();
+        return;
+      }
+      if (roll < .50) {
+        startSpringPad(x);
+        return;
+      }
+      if (roll < .70) {
+        clearStickyBubble(x, y);
+        return;
+      }
+      if (roll < .92) {
+        dropMysteryFruitRain(x, y);
+        return;
+      }
+      triggerAntiGravity();
+    }
+
+    function registerPanMerge(nextLevel) {
+      if (!isParty() || performance.now() > state.panWindowUntil) return;
+      state.panMergeCount += 1;
+      if (state.panMergeCount === 2) {
+        addPartyHeat(10);
+        toast("颠锅 2 连！锅气上来了！");
+        playComboSound(2, nextLevel);
+      } else if (state.panMergeCount === 3) {
+        addPartyHeat(18);
+        const level = clamp(nextLevel + 1, 1, BUBU_START_LEVEL - 1);
+        spawnFruit(level, {
+          x: clamp(W / 2 + rand(-70, 70), WALL + radiusForLevel(level), W - WALL - radiusForLevel(level)),
+          y: SPAWN_Y + rand(-10, 20),
+          vx: rand(-130, 130),
+          vy: rand(-80, 20),
+          mergeLock: .08
+        });
+        toast("颠锅 3 连！奖励高阶果！");
+        logLine("颠锅连击：奖励一个高阶果。");
+      } else if (state.panMergeCount >= 4) {
+        addPartyHeat(24);
+        startRibbonQuest();
+        state.panMergeCount = 0;
+        toast("颠锅 4 连！追加贴贴任务！");
+      }
+    }
+
+    function dropMysteryFruitRain(x, y) {
+      const count = randInt(2, 4);
+      for (let i = 0; i < count; i += 1) {
+        const level = randomPartyLevel(i === 0 ? "high" : "normal");
+        spawnFruit(level, {
+          x: clamp(x + rand(-58, 58), WALL + radiusForLevel(level), W - WALL - radiusForLevel(level)),
+          y: Math.max(42, y + rand(-40, 20)),
+          vx: rand(-170, 170),
+          vy: rand(-150, -20),
+          mergeLock: .08
+        });
+      }
+      addPartyHeat(12);
+      playPartySound(1.25);
+      toast("神秘快递箱开出惊喜果雨！");
+      logLine(`派对事件：神秘快递箱开出 ${count} 个果实。`);
+    }
+
+    function startRibbonQuest() {
+      const candidates = state.fruits.filter(f => !f.evil && !f.special && !f.partyBubu && !isSticky(f) && f.level < BUBU_START_LEVEL);
+      const counts = new Map();
+      for (const f of candidates) counts.set(f.level, (counts.get(f.level) || 0) + 1);
+      const levels = [...counts.entries()].filter(([, count]) => count >= 2).map(([level]) => level);
+      const level = levels.length ? levels[randInt(0, levels.length - 1)] : randInt(0, Math.min(5, partyMaxDropLevel()));
+      const pair = candidates.filter(f => f.level === level).slice(0, 2).map(f => f.id);
+      state.partyQuest = {
+        type: "ribbon",
+        level,
+        ids: pair,
+        until: performance.now() + 12000
+      };
+      addPartyHeat(8);
+      playConfirmSound();
+      toast(`彩带贴贴：让两个 ${fruitTypes[level].name} 碰到一起！`);
+      logLine(`快递箱任务：12 秒内合成 ${fruitTypes[level].name}+${fruitTypes[level].name}。`);
+    }
+
+    function completeRibbonQuest(level) {
+      if (!state.partyQuest || state.partyQuest.type !== "ribbon" || performance.now() > state.partyQuest.until) return;
+      if (state.partyQuest.level !== level) return;
+      const bonus = 600 + level * 120;
+      state.score += bonus;
+      addPartyHeat(18);
+      state.partyQuest = null;
+      setBestForMode(state.score);
+      saveRecords();
+      playConfirmSound();
+      vibrate([18, 24, 18]);
+      toast(`贴贴成功！+${bonus}`);
+      logLine(`彩带贴贴完成，奖励 +${bonus}。`);
+    }
+
+    function startSpringPad(x = W / 2) {
+      state.springPad = {
+        x: clamp(x + rand(-80, 80), WALL + 50, W - WALL - 50),
+        until: performance.now() + 10000
+      };
+      addPartyHeat(10);
+      playPartySound(1.12);
+      toast("箱底弹簧出现，颠过去！");
+      logLine("快递箱事件：箱底弹簧出现 10 秒。");
+    }
+
+    function clearStickyBubble(x, y) {
+      let cleared = 0;
+      for (const f of state.fruits) {
+        if (!f.stickyUntil) continue;
+        if (Math.hypot(f.x - x, f.y - y) > 150 + f.r) continue;
+        f.stickyUntil = 0;
+        f.mergeLock = Math.min(f.mergeLock, .08);
+        cleared += 1;
+        burst(f.x, f.y, 10 + f.level * 2);
+      }
+      addPartyHeat(8);
+      playConfirmSound();
+      vibrate([16, 18, 16]);
+      toast(cleared ? `清爽泡泡解开 ${cleared} 个果实！` : "清爽泡泡：这片区域变滑啦！");
+      logLine(`快递箱事件：清爽泡泡${cleared ? `解开 ${cleared} 个果实` : "出现" }。`);
     }
 
     function dropFruit() {
@@ -1763,6 +2107,7 @@
       }
       const strength = clamp(power, .7, 1.8);
       for (const f of state.fruits) {
+        if (isSticky(f)) continue;
         const sideKick = axisX * rand(90, 180) + rand(-240, 240);
         f.vx += sideKick * strength;
         f.vy -= rand(260, 560) * strength;
@@ -1771,6 +2116,8 @@
       }
       state.partyCooldownUntil = now + (source === "shake" ? 720 : 980);
       state.partyEnergy = Math.min(1, state.partyEnergy + .32 * strength);
+      state.panWindowUntil = now + 8000;
+      if (source === "shake") state.panMergeCount = 0;
       addPartyHeat(source === "shake" ? 12 * strength : 8 * strength);
       state.shake = Math.min(14, 8 + strength * 4);
       playPartySound(strength);
@@ -1814,6 +2161,7 @@
       if (!state.running || state.paused || state.gameOver) return;
       updateChallengePressure(dt);
       updateEvilFruits();
+      updatePartySpecials();
       updatePendingBubus();
       updatePartyEnergy(dt);
       const subSteps = 3;
@@ -1830,10 +2178,17 @@
     }
 
     function integrate(dt) {
+      const now = performance.now();
       for (const f of state.fruits) {
         const pr = getPhysicsRadius(f);
         f.mergeLock = Math.max(0, f.mergeLock - dt);
-        f.vy += gravity * dt;
+        if (isSticky(f)) {
+          f.vx = 0;
+          f.vy = 0;
+          continue;
+        }
+        const grav = isParty() && now < state.antiGravityUntil ? -520 : gravity;
+        f.vy += grav * dt;
         f.x += f.vx * dt;
         f.y += f.vy * dt;
         f.vx *= .995;
@@ -1848,6 +2203,14 @@
           f.vx = -Math.abs(f.vx) * .45;
         }
         if (f.y + pr > FLOOR) {
+          if (isParty() && state.springPad && now < state.springPad.until && Math.abs(f.x - state.springPad.x) < 58) {
+            f.y = FLOOR - pr;
+            f.vy = -Math.abs(f.vy) * .72 - 360;
+            f.vx += rand(-150, 150);
+            state.shake = Math.max(state.shake, 8);
+            burst(f.x, FLOOR - 18, 8 + Math.min(14, f.level * 2));
+            continue;
+          }
           f.y = FLOOR - pr;
           f.vy = -Math.abs(f.vy) * .22;
           f.vx *= .94;
@@ -1967,26 +2330,53 @@
       state.bubuTargetLevel = Math.min(BUBU_FINAL_LEVEL, state.bubuTargetLevel + 1);
     }
 
+    function bankFullBubu(x, y, level) {
+      const baseBonus = 7600 + state.harvests * 900;
+      const comboBonus = state.combo >= 2 ? Math.round(baseBonus * Math.min(.35, state.combo * .05)) : 0;
+      const bonus = baseBonus + comboBonus;
+      state.score += bonus;
+      state.harvests += 1;
+      records.harvests += 1;
+      setBestForMode(state.score);
+      saveRecords();
+      state.shake = 12;
+      burst(x, y, 90);
+      setTimeout(() => {
+        if (state.running || state.gameOver) burst(x, y, 38);
+      }, 120);
+      playHarvestSound();
+      vibrate([28, 35, 45]);
+      logLine(`16 级大卜卜收进丰收仓，奖励 +${bonus}`);
+      toast(`满级大卜卜收仓！+${bonus}`);
+    }
+
     function solveMerges() {
       const used = new Set();
       const created = [];
       for (let i = 0; i < state.fruits.length; i += 1) {
         const a = state.fruits[i];
-        if (used.has(a.id) || a.evil || a.mergeLock > 0 || a.level >= BUBU_START_LEVEL) continue;
+        if (used.has(a.id) || a.evil || a.mergeLock > 0 || isSticky(a)) continue;
+        if (isEasy()) {
+          if (a.level >= BUBU_FINAL_LEVEL) continue;
+        } else if (a.level >= BUBU_START_LEVEL) continue;
         for (let j = i + 1; j < state.fruits.length; j += 1) {
           const b = state.fruits[j];
-          if (used.has(b.id) || b.evil || b.mergeLock > 0 || a.level !== b.level) continue;
+          if (used.has(b.id) || b.evil || b.mergeLock > 0 || isSticky(b) || a.level !== b.level) continue;
           if (!shouldMerge(a, b)) continue;
           used.add(a.id);
           used.add(b.id);
           const nominalNextLevel = a.level + 1;
-          const nextLevel = nominalNextLevel >= BUBU_START_LEVEL ? bubuTargetLevel() : nominalNextLevel;
+          const nextLevel = !isEasy() && nominalNextLevel >= BUBU_START_LEVEL ? bubuTargetLevel() : nominalNextLevel;
           const type = fruitTypes[nextLevel];
           const nx = (a.x + b.x) / 2;
           const ny = (a.y + b.y) / 2;
           const comboBonus = registerMerge(nextLevel);
           const gained = Math.round((type.score + comboBonus) * partyScoreMultiplier());
           state.score += gained;
+          if (isParty()) {
+            completeRibbonQuest(a.level);
+            registerPanMerge(nextLevel);
+          }
           setBestForMode(state.score);
           saveRecords();
           state.merges += 1;
@@ -2002,7 +2392,22 @@
           if (isBubuLevel(nextLevel)) {
             const now = performance.now();
             const radius = radiusForLevel(nextLevel);
-            if (isParty()) {
+            if (isEasy()) {
+              created.push({
+                id: state.id++,
+                level: nextLevel,
+                x: clamp(nx, WALL + radius, W - WALL - radius),
+                y: Math.min(ny, FLOOR - radius),
+                vx: (a.vx + b.vx) * .12,
+                vy: -135,
+                r: radius,
+                born: now,
+                mergeLock: nextLevel >= BUBU_FINAL_LEVEL ? 999 : .12,
+                pendingBank: nextLevel >= BUBU_FINAL_LEVEL,
+                pendingBankAt: nextLevel >= BUBU_FINAL_LEVEL ? now + BUBU_HOLD_MS : 0
+              });
+              toast(nextLevel >= BUBU_FINAL_LEVEL ? "满级大卜卜出现！5秒后收仓！" : "大卜卜继续长大！");
+            } else if (isParty()) {
               created.push({
                 id: state.id++,
                 level: nextLevel,
@@ -2082,6 +2487,7 @@
       if (state.partyEnergy <= 0) return;
       state.partyEnergy = Math.max(0, state.partyEnergy - dt * .55);
       for (const f of state.fruits) {
+        if (isSticky(f)) continue;
         f.vx += rand(-18, 18) * state.partyEnergy;
         f.vy -= rand(0, 20) * state.partyEnergy;
       }
@@ -2090,6 +2496,7 @@
     function updateEvilFruits() {
       const now = performance.now();
       for (const f of state.fruits) {
+        if (f.special) continue;
         if (!f.evil || now < f.evilUntil) continue;
         const target = clamp(f.targetLevel, 0, BUBU_START_LEVEL - 1);
         const type = fruitTypes[target];
@@ -2105,13 +2512,36 @@
       }
     }
 
+    function isSticky(fruit) {
+      return !!fruit.stickyUntil && performance.now() < fruit.stickyUntil;
+    }
+
+    function updatePartySpecials() {
+      if (!isParty()) return;
+      const now = performance.now();
+      const triggered = [];
+      for (const f of state.fruits) {
+        if (!f.special || now < f.triggerAt) continue;
+        triggered.push(f);
+      }
+      if (!triggered.length) return;
+      const ids = new Set(triggered.map(f => f.id));
+      state.fruits = state.fruits.filter(f => !ids.has(f.id));
+      for (const f of triggered) {
+        if (f.special === "sticky") triggerStickyAt(f.x, f.y);
+        else if (f.special === "mystery") triggerMysteryAt(f.x, f.y);
+      }
+    }
+
     function updatePendingBubus() {
       const now = performance.now();
       const ready = state.fruits.filter(f => f.pendingHarvest && now >= f.pendingHarvestAt);
-      if (!ready.length) return;
-      const readyIds = new Set(ready.map(f => f.id));
+      const readyBank = state.fruits.filter(f => f.pendingBank && now >= f.pendingBankAt);
+      if (!ready.length && !readyBank.length) return;
+      const readyIds = new Set(ready.concat(readyBank).map(f => f.id));
       state.fruits = state.fruits.filter(f => !readyIds.has(f.id));
       for (const f of ready) harvestBubu(f.x, f.y, f.level);
+      for (const f of readyBank) bankFullBubu(f.x, f.y, f.level);
     }
 
     function updateDanger(dt) {
@@ -2123,6 +2553,7 @@
       const dangerY = currentDangerY();
       const risky = state.fruits.some(f => {
         if (f.pendingHarvest) return false;
+        if (f.pendingBank) return false;
         if (isParty() && f.partyBubu) return false;
         const oldEnough = now - f.born > 1400;
         const slow = Math.abs(f.vx) + Math.abs(f.vy) < 90;
@@ -2136,9 +2567,10 @@
     function getVisualSize(level, radius) {
       const type = fruitTypes[level];
       const img = images[level];
-      const crop = type.crop || [0, 0, img.naturalWidth || 1, img.naturalHeight || 1];
+      const crop = BODY_CROPS[level] || type.crop || [0, 0, img.naturalWidth || 1, img.naturalHeight || 1];
       const aspect = crop[2] / crop[3];
-      const longSide = radius * 2.28 * (type.visualScale || 1);
+      const radiusRatio = radius / Math.max(1, radiusForLevel(level));
+      const longSide = targetVisualBox(level) * radiusRatio * (type.visualScale || 1);
       return {
         w: (aspect >= 1 ? longSide : longSide * aspect) * (type.xScale || 1),
         h: (aspect >= 1 ? longSide / aspect : longSide) * (type.yScale || 1)
@@ -2148,8 +2580,9 @@
     function visuallyTouches(a, b) {
       const av = getVisualSize(a.level, a.r);
       const bv = getVisualSize(b.level, b.r);
-      const rx = Math.max(1, (av.w + bv.w) * .6);
-      const ry = Math.max(1, (av.h + bv.h) * .6);
+      const scale = isParty() ? PARTY_MERGE_TOUCH_SCALE : MERGE_TOUCH_SCALE;
+      const rx = Math.max(1, (av.w + bv.w) * scale);
+      const ry = Math.max(1, (av.h + bv.h) * scale);
       const nx = (a.x - b.x) / rx;
       const ny = (a.y - b.y) / ry;
       return nx * nx + ny * ny <= 1;
@@ -2161,13 +2594,14 @@
       const dx = Math.abs(a.x - b.x);
       const dy = Math.abs(a.y - b.y);
       const dist = Math.hypot(dx, dy);
-      const touchRadius = a.r + b.r;
-      if (isParty() && dist <= touchRadius * 1.24) return true;
-      if (dist <= touchRadius * 1.12) return true;
+      const touchRadius = getPhysicsRadius(a) + getPhysicsRadius(b);
+      if (dist <= touchRadius * (isParty() ? .96 : .92)) return true;
 
       const av = getVisualSize(a.level, a.r);
       const bv = getVisualSize(b.level, b.r);
-      const closeEnough = dx <= touchRadius * (isParty() ? 1.62 : 1.48) && dy <= Math.max(av.h, bv.h) * (isParty() ? .78 : .68);
+      const closeEnough = dx <= (av.w + bv.w) * (isParty() ? .46 : .43) &&
+        dy <= (av.h + bv.h) * (isParty() ? .46 : .43) &&
+        dist <= touchRadius * (isParty() ? 1 : .95);
       return closeEnough;
     }
 
@@ -2182,18 +2616,58 @@
       state.partyAlbum[fruit.level] = (state.partyAlbum[fruit.level] || 0) + 1;
       state.fruits = state.fruits.filter(f => f.id !== fruit.id);
       const bonus = 900 + (fruit.level - BUBU_START_LEVEL) * 420;
-      state.score += bonus;
-      setBestForMode(state.score);
-      saveRecords();
+      if (!fruit.displayBubu) {
+        state.score += bonus;
+        setBestForMode(state.score);
+        saveRecords();
+      }
       burst(fruit.x, fruit.y, 38 + (fruit.level - BUBU_START_LEVEL) * 8);
       state.shake = Math.max(state.shake, 8);
       addPartyHeat(10);
       playConfirmSound();
       vibrate([18, 28, 18]);
-      logLine(`${bubuRoundName(fruit.level)}收进相册，纪念分 +${bonus}`);
-      toast(`${bubuRoundName(fruit.level)}进相册！+${bonus}`);
+      logLine(fruit.displayBubu
+        ? `${bubuRoundName(fruit.level)}回到相册。`
+        : `${bubuRoundName(fruit.level)}收进相册，纪念分 +${bonus}`);
+      toast(fruit.displayBubu ? `${bubuRoundName(fruit.level)}回相册！` : `${bubuRoundName(fruit.level)}进相册！+${bonus}`);
       updateUi();
       return true;
+    }
+
+    function releaseAlbumBubu(level) {
+      if (!isParty()) return;
+      if ((state.partyAlbum[level] || 0) <= 0) {
+        toast("相册里还没有这个卜卜。");
+        return;
+      }
+      state.partyAlbum[level] -= 1;
+      const radius = radiusForLevel(level);
+      const x = clamp(W / 2 + rand(-82, 82), WALL + radius, W - WALL - radius);
+      const now = performance.now();
+      state.fruits.push({
+        id: state.id++,
+        level,
+        x,
+        y: SPAWN_Y + rand(-10, 18),
+        vx: rand(-90, 90),
+        vy: rand(-40, 30),
+        r: radius,
+        born: now,
+        mergeLock: 999,
+        partyBubu: true,
+        displayBubu: true
+      });
+      state.paused = false;
+      ui.overlay.hidden = true;
+      setPauseButtons(false);
+      restoreRecordGrid();
+      addPartyHeat(12);
+      burst(x, SPAWN_Y + 20, 32 + (level - BUBU_START_LEVEL) * 8);
+      playPartySound(1.15);
+      vibrate([18, 28, 18]);
+      logLine(`${bubuRoundName(level)}从相册回到派对现场。`);
+      toast(`${bubuRoundName(level)}放出来啦！`);
+      updateUi();
     }
 
     function pickPartyBubu(point) {
@@ -2306,8 +2780,57 @@
       ctx.translate(ox, oy);
       drawCrate();
       drawAim();
+      drawPartyTargets();
       for (const f of state.fruits) drawFruit(ctx, f.x, f.y, f.level, f.r, 1, f);
       for (const p of state.particles) drawParticle(p);
+      ctx.restore();
+    }
+
+    function drawPartyTargets() {
+      if (!isParty()) return;
+      const now = performance.now();
+      if (state.springPad && now < state.springPad.until) {
+        const pulse = Math.sin(now / 95) * 4;
+        ctx.save();
+        ctx.fillStyle = "rgba(255,230,111,.82)";
+        ctx.strokeStyle = "#2a160b";
+        ctx.lineWidth = 4;
+        ctx.fillRect(state.springPad.x - 42, FLOOR - 18 + pulse * .2, 84, 14);
+        ctx.strokeRect(state.springPad.x - 42, FLOOR - 18 + pulse * .2, 84, 14);
+        ctx.fillStyle = "#fff4c3";
+        ctx.font = "900 13px Microsoft YaHei, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("弹簧", state.springPad.x, FLOOR - 28);
+        ctx.restore();
+      } else if (state.springPad && now >= state.springPad.until) {
+        state.springPad = null;
+      }
+
+      if (!state.partyQuest || state.partyQuest.type !== "ribbon") return;
+      if (now > state.partyQuest.until) {
+        state.partyQuest = null;
+        return;
+      }
+      const pair = state.partyQuest.ids.map(id => state.fruits.find(f => f.id === id)).filter(Boolean);
+      ctx.save();
+      ctx.strokeStyle = "rgba(255,230,111,.9)";
+      ctx.lineWidth = 4;
+      ctx.setLineDash([8, 6]);
+      if (pair.length === 2) {
+        ctx.beginPath();
+        ctx.moveTo(pair[0].x, pair[0].y);
+        ctx.lineTo(pair[1].x, pair[1].y);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+      ctx.fillStyle = "#ffe66f";
+      ctx.strokeStyle = "#2a160b";
+      ctx.lineWidth = 3;
+      ctx.font = "900 14px Microsoft YaHei, sans-serif";
+      ctx.textAlign = "center";
+      const text = `贴贴 ${fruitTypes[state.partyQuest.level].name}  ${Math.ceil((state.partyQuest.until - now) / 1000)}s`;
+      ctx.strokeText(text, W / 2, 54);
+      ctx.fillText(text, W / 2, 54);
       ctx.restore();
     }
 
@@ -2360,7 +2883,7 @@
       if (!state.running || state.gameOver) return;
       const aimLevel = isParty() ? EVIL_LEVEL : state.nextLevel;
       const type = fruitTypes[aimLevel];
-      const radius = isParty() ? Math.min(evilRadius(), 24) : (state.nextEvil ? evilRadius() : radiusForLevel(aimLevel));
+      const radius = isParty() ? evilRadius() : (state.nextEvil ? evilRadius() : radiusForLevel(aimLevel));
       const x = clamp(state.aimX, WALL + radius, W - WALL - radius);
       ctx.strokeStyle = "rgba(42,22,11,.32)";
       ctx.lineWidth = 2;
@@ -2382,10 +2905,33 @@
         const grow = 1 - clamp(left / BUBU_GROW_MS, 0, 1);
         const pulse = Math.sin(performance.now() / 85) * .025;
         drawRadius = radius * (1.08 + grow * .52 + pulse);
+      } else if (meta.pendingBank) {
+        const left = Math.max(0, meta.pendingBankAt - performance.now());
+        const grow = 1 - clamp(left / BUBU_GROW_MS, 0, 1);
+        const pulse = Math.sin(performance.now() / 90) * .025;
+        drawRadius = radius * (1.05 + grow * .28 + pulse);
       }
       context.save();
       context.globalAlpha = alpha;
       context.imageSmoothingEnabled = false;
+      if (meta.special === "mystery") {
+        drawRadius = evilRadius();
+        context.fillStyle = "#f7b345";
+        context.fillRect(x - drawRadius * .72, y - drawRadius * .58, drawRadius * 1.44, drawRadius * 1.16);
+        context.strokeStyle = "#2a160b";
+        context.lineWidth = Math.max(4, drawRadius * .12);
+        context.strokeRect(x - drawRadius * .72, y - drawRadius * .58, drawRadius * 1.44, drawRadius * 1.16);
+        context.fillStyle = "#fff4c3";
+        context.font = `900 ${Math.max(24, drawRadius * .86)}px Microsoft YaHei, sans-serif`;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.strokeStyle = "#2a160b";
+        context.lineWidth = 5;
+        context.strokeText("?", x, y);
+        context.fillText("?", x, y);
+        context.restore();
+        return;
+      }
       if (meta.partyBubu) {
         const pulse = Math.sin(performance.now() / 210) * .08 + .92;
         context.strokeStyle = "rgba(255,230,111,.78)";
@@ -2400,7 +2946,7 @@
       context.fill();
 
       if (img.complete && img.naturalWidth) {
-        const crop = type.crop || [0, 0, img.naturalWidth, img.naturalHeight];
+        const crop = BODY_CROPS[level] || type.crop || [0, 0, img.naturalWidth, img.naturalHeight];
         const visual = getVisualSize(level, drawRadius);
         const dw = visual.w;
         const dh = visual.h;
@@ -2423,6 +2969,22 @@
         context.lineWidth = 4;
         context.strokeText("?", x, y + drawRadius * .04);
         context.fillText("?", x, y + drawRadius * .04);
+      }
+      if (isSticky(meta)) {
+        const left = Math.ceil((meta.stickyUntil - performance.now()) / 1000);
+        context.strokeStyle = "rgba(93,214,87,.82)";
+        context.lineWidth = Math.max(4, drawRadius * .1);
+        context.beginPath();
+        context.arc(x, y, drawRadius * 1.18, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = "#e6ff9c";
+        context.font = `900 ${Math.max(14, drawRadius * .34)}px Microsoft YaHei, sans-serif`;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.strokeStyle = "#2f7c3a";
+        context.lineWidth = 3;
+        context.strokeText(`${left}`, x, y - drawRadius * 1.2);
+        context.fillText(`${left}`, x, y - drawRadius * 1.2);
       }
       context.restore();
     }
@@ -2493,13 +3055,16 @@
       ui.max.textContent = fruitTypes[state.maxLevel].name;
       ui.merge.textContent = state.merges;
       ui.best.textContent = bestForMode();
+      ui.album.disabled = !isParty();
+      ui.album.style.opacity = isParty() ? "1" : ".55";
       if (state.dangerTimer > 0) {
         ui.danger.textContent = `爆仓倒计时 ${Math.max(0, 2.2 - state.dangerTimer).toFixed(1)}s`;
       } else if (isParty()) {
         const left = Math.max(0, state.partyCooldownUntil - performance.now());
         const heat = Math.round(state.partyHeat);
         const prefix = left > 0 ? `冷却 ${(left / 1000).toFixed(1)}s` : `热度 ${heat}%`;
-        ui.danger.textContent = `${prefix} · ${partyAlbumText()}`;
+        const quest = state.partyQuest ? ` · 贴贴${fruitTypes[state.partyQuest.level].name}` : "";
+        ui.danger.textContent = `${prefix} · ${partyAlbumText()}${quest}`;
       } else if (isChallenge() && !state.pressureUnlocked) {
         ui.danger.textContent = "合成 06 解锁压力线";
       } else if (pressureGraceActive()) {
@@ -2635,6 +3200,12 @@
       playMoveSound(state.aimX);
       vibrate(6);
     });
+    ui.album.addEventListener("click", openAlbum);
+    ui.recordSummary.addEventListener("click", event => {
+      const button = event.target.closest("[data-release-bubu]");
+      if (!button) return;
+      releaseAlbumBubu(Number(button.dataset.releaseBubu));
+    });
     ui.modeMenu.addEventListener("click", () => openPauseMenu("mode"));
     ui.restart.addEventListener("click", () => openPauseMenu("pause"));
     ui.continue.addEventListener("click", continueGame);
@@ -2703,6 +3274,7 @@
   </script>
 </body>
 </html>
+
 
 
 

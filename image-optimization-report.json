@@ -1,0 +1,137 @@
+{
+  "stage": "C:\\Users\\Administrator\\Documents\\游戏\\github-upload-bubu-optimized-20260714-175009",
+  "max_side": 448,
+  "old_total_kb": 6734.5,
+  "new_total_kb": 2757.5,
+  "saved_percent": 59.1,
+  "rows": [
+    {
+      "name": "fruit-01.png",
+      "old_px": "640x607",
+      "new_px": "448x425",
+      "old_kb": 501.6,
+      "new_kb": 205.3,
+      "saved_percent": 59.1
+    },
+    {
+      "name": "fruit-02.png",
+      "old_px": "640x640",
+      "new_px": "448x448",
+      "old_kb": 459.8,
+      "new_kb": 194.7,
+      "saved_percent": 57.6
+    },
+    {
+      "name": "fruit-03.png",
+      "old_px": "640x441",
+      "new_px": "448x309",
+      "old_kb": 445.6,
+      "new_kb": 178.9,
+      "saved_percent": 59.9
+    },
+    {
+      "name": "fruit-04.png",
+      "old_px": "640x582",
+      "new_px": "448x407",
+      "old_kb": 375.9,
+      "new_kb": 160.1,
+      "saved_percent": 57.4
+    },
+    {
+      "name": "fruit-05.png",
+      "old_px": "563x640",
+      "new_px": "394x448",
+      "old_kb": 362.9,
+      "new_kb": 159.7,
+      "saved_percent": 56.0
+    },
+    {
+      "name": "fruit-06.png",
+      "old_px": "640x501",
+      "new_px": "448x351",
+      "old_kb": 376.1,
+      "new_kb": 154.1,
+      "saved_percent": 59.0
+    },
+    {
+      "name": "fruit-07.png",
+      "old_px": "640x576",
+      "new_px": "448x403",
+      "old_kb": 438.6,
+      "new_kb": 174.2,
+      "saved_percent": 60.3
+    },
+    {
+      "name": "fruit-08.png",
+      "old_px": "504x640",
+      "new_px": "353x448",
+      "old_kb": 311.5,
+      "new_kb": 128.1,
+      "saved_percent": 58.9
+    },
+    {
+      "name": "fruit-09.png",
+      "old_px": "640x640",
+      "new_px": "448x448",
+      "old_kb": 511.0,
+      "new_kb": 207.7,
+      "saved_percent": 59.4
+    },
+    {
+      "name": "fruit-10.png",
+      "old_px": "640x640",
+      "new_px": "448x448",
+      "old_kb": 541.1,
+      "new_kb": 217.5,
+      "saved_percent": 59.8
+    },
+    {
+      "name": "fruit-11.png",
+      "old_px": "512x640",
+      "new_px": "358x448",
+      "old_kb": 319.5,
+      "new_kb": 117.5,
+      "saved_percent": 63.2
+    },
+    {
+      "name": "fruit-12.png",
+      "old_px": "640x640",
+      "new_px": "448x448",
+      "old_kb": 471.7,
+      "new_kb": 187.7,
+      "saved_percent": 60.2
+    },
+    {
+      "name": "fruit-13.png",
+      "old_px": "525x640",
+      "new_px": "368x448",
+      "old_kb": 408.4,
+      "new_kb": 164.9,
+      "saved_percent": 59.6
+    },
+    {
+      "name": "fruit-14.png",
+      "old_px": "552x640",
+      "new_px": "386x448",
+      "old_kb": 359.2,
+      "new_kb": 155.0,
+      "saved_percent": 56.8
+    },
+    {
+      "name": "fruit-15.png",
+      "old_px": "640x640",
+      "new_px": "448x448",
+      "old_kb": 384.9,
+      "new_kb": 154.2,
+      "saved_percent": 59.9
+    },
+    {
+      "name": "fruit-16.png",
+      "old_px": "640x640",
+      "new_px": "448x448",
+      "old_kb": 466.7,
+      "new_kb": 198.0,
+      "saved_percent": 57.6
+    }
+  ]
+}
