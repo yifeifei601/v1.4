@@ -1021,6 +1021,230 @@
         line-height: 1.55;
       }
     }
+
+    @media (max-width: 820px), (pointer: coarse) and (max-width: 980px) {
+      html, body {
+        height: 100dvh;
+        overflow: hidden;
+      }
+
+      body {
+        background:
+          linear-gradient(#7fd7ff 0 18%, #b6f3bb 18% 26%, transparent 26%),
+          repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 4px, transparent 4px 16px),
+          linear-gradient(180deg, #71c853 0%, #4fa846 100%);
+      }
+
+      .app {
+        width: 100vw;
+        height: 100dvh;
+        min-height: 0;
+        padding: calc(env(safe-area-inset-top) + 5px) 5px calc(env(safe-area-inset-bottom) + 5px);
+        gap: 5px;
+      }
+
+      header,
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        gap: 5px;
+      }
+
+      main {
+        height: 100%;
+        min-height: 0;
+      }
+
+      .title-board {
+        width: 100%;
+        min-width: 0;
+        padding: 7px 124px 7px 11px;
+        border-width: 3px;
+        box-shadow: 3px 3px 0 var(--ink);
+      }
+
+      .title-board:before,
+      .title-board:after,
+      .subtitle,
+      .brief-text span,
+      aside {
+        display: none;
+      }
+
+      h1 {
+        font-size: clamp(23px, 7vw, 32px);
+        letter-spacing: 0;
+      }
+
+      .toggle-row {
+        top: 6px;
+        right: 7px;
+        gap: 4px;
+      }
+
+      .toggle-btn {
+        min-width: 52px;
+        padding: 4px 5px;
+        border-width: 2px;
+        font-size: 11px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .stat {
+        min-width: 0;
+        padding: 4px 3px;
+        border-width: 3px;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+
+      .stat span {
+        font-size: 10px;
+      }
+
+      .stat strong {
+        margin-top: 1px;
+        font-size: 17px;
+      }
+
+      .stage {
+        min-height: 0;
+        height: 100%;
+        padding: 5px;
+        border-width: 3px;
+        box-shadow: 3px 3px 0 rgba(42, 22, 11, .32);
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+
+      .brief {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 5px;
+        margin-bottom: 5px;
+      }
+
+      .brief-text,
+      .pill {
+        border-width: 3px;
+        box-shadow: 2px 2px 0 rgba(42, 22, 11, .65);
+      }
+
+      .brief-text {
+        padding: 5px 8px;
+      }
+
+      .brief-text b {
+        margin: 0;
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .pill {
+        padding: 5px 7px;
+        font-size: 12px;
+      }
+
+      .play-wrap {
+        height: 100%;
+        min-height: 0;
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 1fr) auto;
+        justify-items: center;
+        align-content: stretch;
+        gap: 5px;
+      }
+
+      #gameCanvas {
+        width: min(100%, 430px, calc((100dvh - 170px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) * .65625));
+        height: auto;
+        max-height: calc(100dvh - 170px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        border-width: 4px;
+        box-shadow: 4px 4px 0 rgba(42, 22, 11, .35);
+      }
+
+      .side-stack {
+        width: min(430px, 100%);
+        display: grid;
+        grid-template-columns: 46px minmax(0, 1fr);
+        align-items: start;
+        gap: 5px;
+      }
+
+      .next-card {
+        padding: 4px;
+        border-width: 3px;
+        box-shadow: 3px 3px 0 var(--ink);
+      }
+
+      .side-stack .next-card:first-child {
+        display: grid;
+        place-items: center;
+        align-content: center;
+      }
+
+      .side-stack .next-card:first-child b,
+      .side-stack .next-card:nth-child(2) b,
+      #leftBtn,
+      #dropBtn,
+      #rightBtn {
+        display: none;
+      }
+
+      #nextCanvas {
+        width: 36px;
+        height: 36px;
+        border-width: 2px;
+      }
+
+      .side-stack .next-card:nth-child(2) {
+        justify-self: end;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, auto));
+        justify-content: end;
+        gap: 4px;
+      }
+
+      .btn {
+        min-height: 38px;
+        padding: 7px 8px;
+        border-width: 3px;
+        box-shadow: 3px 3px 0 var(--ink);
+        font-size: 14px;
+      }
+
+      #partyBtn {
+        min-width: 78px;
+      }
+
+      #modeMenuBtn,
+      #restartBtn {
+        min-width: 66px;
+      }
+
+      .album-tab {
+        top: 44px;
+        right: 8px;
+        min-width: 66px;
+        padding: 5px 7px;
+        border-width: 3px;
+        font-size: 12px;
+        box-shadow: 2px 2px 0 rgba(42, 22, 11, .72);
+      }
+    }
   </style>
 </head>
 <body>
