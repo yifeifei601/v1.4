@@ -394,41 +394,181 @@
       box-shadow: 2px 2px 0 rgba(42, 22, 11, .55);
     }
 
+    .album-tab {
+      position: absolute;
+      z-index: 6;
+      top: 70px;
+      right: 16px;
+      min-width: 94px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #fff4c3;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,.16) 0 8px, transparent 8px 18px),
+        linear-gradient(180deg, #f1b95a, #b96f2c);
+      box-shadow: 3px 3px 0 rgba(42, 22, 11, .72);
+      font-size: 14px;
+      font-weight: 1000;
+      text-shadow: 2px 2px 0 var(--ink);
+      cursor: pointer;
+    }
+
+    .album-tab:before {
+      content: "相册";
+      margin-right: 4px;
+    }
+
+    .album-tab[disabled] {
+      opacity: .45;
+      cursor: default;
+      filter: grayscale(.25);
+    }
+
+    .album-drawer {
+      position: absolute;
+      z-index: 9;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      max-height: min(48%, 310px);
+      border: 4px solid var(--ink);
+      border-radius: 10px 10px 8px 8px;
+      padding: 12px;
+      background:
+        linear-gradient(180deg, rgba(255,244,195,.97), rgba(255,230,166,.98)),
+        repeating-linear-gradient(90deg, rgba(185,111,44,.16) 0 12px, transparent 12px 24px);
+      box-shadow: 6px 6px 0 rgba(42, 22, 11, .5);
+      transform: translateY(0);
+      transition: transform .16s ease-out, opacity .16s ease-out;
+    }
+
+    .album-drawer[hidden] {
+      display: block;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(calc(100% + 22px));
+    }
+
+    .album-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .album-title {
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      padding: 7px 18px;
+      color: #6f3b18;
+      background:
+        linear-gradient(180deg, #fff4c3, #ffe6a6);
+      box-shadow: 3px 3px 0 rgba(42, 22, 11, .38);
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 1000;
+      text-shadow: 1px 1px 0 rgba(255, 255, 255, .7);
+    }
+
+    .album-close {
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      padding: 7px 12px;
+      color: #fff4c3;
+      background: linear-gradient(180deg, #f7b345, #c96a24);
+      box-shadow: 3px 3px 0 rgba(42, 22, 11, .5);
+      font-weight: 1000;
+      text-shadow: 1px 1px 0 var(--ink);
+      cursor: pointer;
+    }
+
     .album-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 8px;
-      margin: 0 auto 14px;
-      max-width: 580px;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      padding: 2px 2px 10px;
+      scrollbar-width: thin;
     }
 
     .album-item {
+      position: relative;
+      flex: 0 0 104px;
+      min-height: 154px;
       border: 3px solid var(--ink);
-      border-radius: 6px;
-      padding: 8px 6px;
-      background: #ffe6a6;
-      box-shadow: 2px 2px 0 rgba(42, 22, 11, .55);
+      border-radius: 9px;
+      padding: 8px 7px 9px;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,.12) 0 8px, transparent 8px 18px),
+        linear-gradient(180deg, #c9873e, #9f5f28);
+      box-shadow: 3px 3px 0 rgba(42, 22, 11, .45);
       text-align: center;
-      color: #5c3c1e;
+      color: #fff4c3;
       font-size: 12px;
       font-weight: 1000;
+      text-shadow: 1px 1px 0 var(--ink);
+    }
+
+    .album-item.empty {
+      opacity: .72;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 8px, transparent 8px 18px),
+        linear-gradient(180deg, #b7844a, #80502b);
+    }
+
+    .album-level {
+      position: absolute;
+      top: 7px;
+      left: 7px;
+      min-width: 28px;
+      border-radius: 10px;
+      padding: 2px 5px;
+      background: rgba(42, 22, 11, .72);
+      color: #fff4c3;
+      font-size: 12px;
+    }
+
+    .album-count {
+      position: absolute;
+      right: 8px;
+      bottom: 42px;
+      min-width: 26px;
+      border-radius: 12px;
+      padding: 2px 6px;
+      background: rgba(42, 22, 11, .78);
+      color: #fff;
+      font-size: 13px;
     }
 
     .album-item img {
-      width: 52px;
-      height: 52px;
+      width: 74px;
+      height: 74px;
       object-fit: contain;
       display: block;
-      margin: 0 auto 5px;
+      margin: 20px auto 7px;
       image-rendering: auto;
+    }
+
+    .album-empty-mark {
+      width: 74px;
+      height: 74px;
+      margin: 20px auto 7px;
+      border: 2px dashed rgba(255, 244, 195, .72);
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: rgba(255,244,195,.86);
+      font-size: 34px;
+      text-shadow: 2px 2px 0 rgba(42, 22, 11, .55);
     }
 
     .album-item button {
       width: 100%;
-      margin-top: 6px;
       border: 2px solid var(--ink);
-      border-radius: 5px;
-      padding: 5px 4px;
+      border-radius: 7px;
+      padding: 6px 4px;
       color: #fff4c3;
       background: linear-gradient(180deg, #65c85c, #2f8f3f);
       box-shadow: 2px 2px 0 var(--ink);
@@ -439,7 +579,7 @@
     }
 
     .album-item button:disabled {
-      opacity: .45;
+      opacity: .58;
       cursor: default;
       background: linear-gradient(180deg, #a97945, #70411e);
     }
@@ -708,6 +848,62 @@
         box-shadow: 3px 3px 0 rgba(42, 22, 11, .32);
       }
 
+      .album-tab {
+        top: 48px;
+        right: 9px;
+        min-width: 72px;
+        padding: 5px 8px;
+        border-width: 3px;
+        border-radius: 7px;
+        box-shadow: 2px 2px 0 rgba(42, 22, 11, .72);
+        font-size: 12px;
+      }
+
+      .album-drawer {
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+        max-height: min(46%, 264px);
+        padding: 9px;
+        border-width: 3px;
+        box-shadow: 3px 3px 0 rgba(42, 22, 11, .5);
+      }
+
+      .album-head {
+        margin-bottom: 8px;
+      }
+
+      .album-title {
+        padding: 6px 14px;
+        border-width: 3px;
+        font-size: 18px;
+      }
+
+      .album-close {
+        padding: 6px 10px;
+        border-width: 3px;
+        font-size: 13px;
+      }
+
+      .album-grid {
+        gap: 8px;
+        padding-bottom: 8px;
+      }
+
+      .album-item {
+        flex-basis: 92px;
+        min-height: 142px;
+        border-width: 3px;
+        padding: 7px 6px 8px;
+      }
+
+      .album-item img,
+      .album-empty-mark {
+        width: 64px;
+        height: 64px;
+        margin-top: 19px;
+      }
+
       .play-wrap {
         grid-template-columns: 1fr;
         grid-template-rows: minmax(0, 1fr) auto;
@@ -849,6 +1045,7 @@
     <main>
       <section class="stage">
         <div class="farm-bg"></div>
+        <button class="album-tab" id="albumBtn" type="button" disabled>0</button>
         <div class="brief">
           <div class="brief-text">
             <b>今日收获：12-16 级大卜卜进化</b>
@@ -871,7 +1068,6 @@
                 <button class="btn green" id="dropBtn">投放</button>
                 <button class="btn" id="rightBtn">右移</button>
                 <button class="btn primary" id="partyBtn">派对一下</button>
-                <button class="btn" id="albumBtn">相册</button>
                 <button class="btn" id="modeMenuBtn">换模式</button>
                 <button class="btn" id="restartBtn">暂停</button>
               </div>
@@ -896,6 +1092,14 @@
               <button class="btn" id="shareBtn" type="button">复制战绩</button>
             </div>
           </div>
+        </div>
+
+        <div class="album-drawer" id="albumDrawer" hidden>
+          <div class="album-head">
+            <div class="album-title">派对相册</div>
+            <button class="album-close" id="albumCloseBtn" type="button">收起</button>
+          </div>
+          <div class="album-grid" id="albumGrid"></div>
         </div>
       </section>
 
@@ -949,6 +1153,9 @@
       right: document.getElementById("rightBtn"),
       party: document.getElementById("partyBtn"),
       album: document.getElementById("albumBtn"),
+      albumDrawer: document.getElementById("albumDrawer"),
+      albumGrid: document.getElementById("albumGrid"),
+      albumClose: document.getElementById("albumCloseBtn"),
       modeMenu: document.getElementById("modeMenuBtn"),
       restart: document.getElementById("restartBtn"),
       music: document.getElementById("musicBtn"),
@@ -976,49 +1183,60 @@
     const EVIL_RADIUS_MIN = 20;
     const EVIL_RADIUS_MAX = 28;
     const EVIL_PREVIEW_RADIUS = 27;
+    const SPECIAL_AIM_PREVIEW_SCALE = .62;
+    const SPECIAL_NEXT_PREVIEW_SCALE = .72;
+    const PARTY_SPECIAL_RADIUS_MIN = 34;
+    const PARTY_SPECIAL_RADIUS_MAX = 42;
     const PHYSICS_RADIUS_SCALE = .95;
-    const MERGE_TOUCH_SCALE = .46;
-    const PARTY_MERGE_TOUCH_SCALE = .49;
+    const MERGE_TOUCH_SCALE = .5;
+    const PARTY_MERGE_TOUCH_SCALE = .505;
+    const VISUAL_SIZE_TUNE = 1.12;
     const PARTY_BUBU_SCORE_STEP = .08;
     const STICKY_MS = 10000;
     const ANTIGRAVITY_MS = 3000;
+    const CHALLENGE_PRESS_MS = 8000;
+    const CHALLENGE_IRON_MS = 6000;
+    const CHALLENGE_SEAL_MS = 8000;
+    const CHALLENGE_HEAVY_MS = 5000;
+    const PARTY_FAKE_MERGE_MS = 1400;
     const VISUAL_TARGET_BOXES = [32, 40, 49, 59, 70, 82, 95, 110, 112, 142, 158, 174, 174, 174, 174, 174];
     const BODY_CROPS = [
-      [50, 41, 360, 355],
-      [62, 42, 326, 359],
-      [29, 48, 390, 240],
-      [46, 43, 346, 307],
-      [63, 13, 268, 408],
-      [55, 31, 331, 284],
-      [36, 39, 377, 324],
-      [49, 49, 257, 348],
-      [59, 35, 326, 377],
-      [66, 59, 346, 359],
-      [90, 22, 177, 391],
-      [76, 21, 306, 398],
-      [48, 21, 264, 414],
-      [21, 25, 339, 397],
-      [95, 46, 262, 362],
-      [74, 35, 290, 372]
+      [72, 58, 515, 507],
+      [88, 60, 465, 513],
+      [42, 68, 557, 343],
+      [66, 62, 495, 439],
+      [90, 18, 383, 583],
+      [78, 44, 473, 405],
+      [52, 56, 539, 463],
+      [70, 70, 367, 497],
+      [84, 50, 465, 539],
+      [94, 84, 495, 513],
+      [128, 32, 253, 559],
+      [108, 30, 437, 569],
+      [68, 30, 377, 591],
+      [30, 36, 485, 567],
+      [136, 66, 375, 517],
+      [106, 50, 415, 531]
     ];
     const gravity = 980;
+    // 图标编号表：01 青苹果，02 黄柠檬，03 西瓜，04 南瓜，05 梨，06 西红柿，07 樱桃，08 小鸡，09 草莓，10 炸虾，11 益力多，12 橙卜，13 生日蛋糕卜，14 雪人卜，15 财神卜，16 邪恶卜。
     const fruitTypes = [
-      { name: "01", src: "assets/fruit-01.png?v=1.5.1-opt", r: 14, score: 2, crop: [0, 0, 640, 607], visualScale: 1.1  },
-      { name: "02", src: "assets/fruit-02.png?v=1.5.1-opt", r: 18, score: 5, crop: [0, 0, 640, 640], visualScale: 1.1  },
-      { name: "03", src: "assets/fruit-03.png?v=1.5.1-opt", r: 22, score: 10, crop: [0, 0, 640, 441], visualScale: 1.09  },
-      { name: "04", src: "assets/fruit-04.png?v=1.5.1-opt", r: 27, score: 18, crop: [0, 0, 640, 582], visualScale: 1.08  },
-      { name: "05", src: "assets/fruit-05.png?v=1.5.1-opt", r: 32, score: 32, crop: [0, 0, 563, 640], visualScale: 1.08  },
-      { name: "06", src: "assets/fruit-06.png?v=1.5.1-opt", r: 38, score: 55, crop: [0, 0, 640, 501], visualScale: 1.07  },
-      { name: "07", src: "assets/fruit-07.png?v=1.5.1-opt", r: 44, score: 90, crop: [0, 0, 640, 576], visualScale: 1.07  },
-      { name: "08", src: "assets/fruit-08.png?v=1.5.1-opt", r: 50, score: 145, crop: [0, 0, 640, 640], visualScale: 1.06  },
-      { name: "09", src: "assets/fruit-09.png?v=1.5.1-opt", r: 57, score: 230, crop: [0, 0, 640, 640], visualScale: 1.06  },
-      { name: "10", src: "assets/fruit-10.png?v=1.5.1-opt", r: 64, score: 360, crop: [0, 0, 512, 640], visualScale: 1.05  },
-      { name: "11", src: "assets/fruit-11.png?v=1.5.1-opt", r: 72, score: 560, crop: [0, 0, 640, 640], visualScale: 1.05  },
-      { name: "12", src: "assets/fruit-12.png?v=1.5.1-opt", r: 80, score: 820, crop: [0, 0, 640, 640], visualScale: 1.04  },
-      { name: "13", src: "assets/fruit-13.png?v=1.5.1-opt", r: 88, score: 1200, crop: [0, 0, 525, 640], visualScale: 1.04  },
-      { name: "14", src: "assets/fruit-14.png?v=1.5.1-opt", r: 96, score: 1700, crop: [0, 0, 552, 640], visualScale: 1.03  },
-      { name: "15", src: "assets/fruit-15.png?v=1.5.1-opt", r: 104, score: 2400, crop: [0, 0, 640, 640], visualScale: 1.03  },
-      { name: "16", src: "assets/fruit-16.png?v=1.5.1-opt", r: 112, score: 3300, crop: [0, 0, 471, 640], visualScale: 1.02  }
+      { name: "01", src: "assets/fruit-01.png?v=1.5.0", r: 14, score: 2, crop: [0, 0, 640, 607], visualScale: 1.1  },
+      { name: "02", src: "assets/fruit-02.png?v=1.5.0", r: 18, score: 5, crop: [0, 0, 640, 640], visualScale: 1.1  },
+      { name: "03", src: "assets/fruit-03.png?v=1.5.0", r: 22, score: 10, crop: [0, 0, 640, 441], visualScale: 1.09  },
+      { name: "04", src: "assets/fruit-04.png?v=1.5.0", r: 27, score: 18, crop: [0, 0, 640, 582], visualScale: 1.08  },
+      { name: "05", src: "assets/fruit-05.png?v=1.5.0", r: 32, score: 32, crop: [0, 0, 563, 640], visualScale: 1.08  },
+      { name: "06", src: "assets/fruit-06.png?v=1.5.0", r: 38, score: 55, crop: [0, 0, 640, 501], visualScale: 1.07  },
+      { name: "07", src: "assets/fruit-07.png?v=1.5.0", r: 44, score: 90, crop: [0, 0, 640, 576], visualScale: 1.07  },
+      { name: "08", src: "assets/fruit-08.png?v=1.5.0", r: 50, score: 145, crop: [0, 0, 640, 640], visualScale: 1.06, physicsScale: .82  },
+      { name: "09", src: "assets/fruit-09.png?v=1.5.0", r: 57, score: 230, crop: [0, 0, 640, 640], visualScale: .95  },
+      { name: "10", src: "assets/fruit-10.png?v=1.5.0", r: 64, score: 360, crop: [0, 0, 640, 640], visualScale: .74, physicsScale: .58  },
+      { name: "11", src: "assets/fruit-11.png?v=1.5.0", r: 72, score: 560, crop: [0, 0, 512, 640], visualScale: 1.05, physicsScale: .76  },
+      { name: "12", src: "assets/fruit-12.png?v=1.5.0", r: 80, score: 820, crop: [0, 0, 640, 640], visualScale: .9  },
+      { name: "13", src: "assets/fruit-13.png?v=1.5.0", r: 88, score: 1200, crop: [0, 0, 525, 640], visualScale: 1.04  },
+      { name: "14", src: "assets/fruit-14.png?v=1.5.0", r: 96, score: 1700, crop: [0, 0, 552, 640], visualScale: .9  },
+      { name: "15", src: "assets/fruit-15.png?v=1.5.0", r: 104, score: 2400, crop: [0, 0, 640, 640], visualScale: .9  },
+      { name: "16", src: "assets/fruit-16.png?v=1.5.0", r: 112, score: 3300, crop: [0, 0, 471, 640], visualScale: .9  }
     ];
 
     const images = fruitTypes.map(type => {
@@ -1053,6 +1271,12 @@
       partyEnergy: 0,
       partyHeat: 0,
       partyAlbum: {},
+      partyAlbumUnlocked: {},
+      lastPartyEvilEffect: "",
+      lastChallengeEvilEffect: "",
+      challengePressurePushUntil: 0,
+      challengePressurePush: 0,
+      challengeSealUntil: 0,
       antiGravityUntil: 0,
       partyQuest: null,
       springPad: null,
@@ -1112,6 +1336,22 @@
       return state.mode === "easy";
     }
 
+    function challengeSealActive() {
+      return isChallenge() && performance.now() < state.challengeSealUntil;
+    }
+
+    function aimMin(extra = 16) {
+      return WALL + extra + (challengeSealActive() ? 54 : 0);
+    }
+
+    function aimMax(extra = 16) {
+      return W - WALL - extra - (challengeSealActive() ? 54 : 0);
+    }
+
+    function clampAim(x, extra = 16) {
+      return clamp(x, aimMin(extra), aimMax(extra));
+    }
+
     function bubuTargetLevel() {
       return clamp(state.bubuTargetLevel, BUBU_START_LEVEL, BUBU_FINAL_LEVEL);
     }
@@ -1167,9 +1407,9 @@
       ui.challengeMode.classList.toggle("active", shownMode === "challenge");
       ui.partyMode.classList.toggle("active", shownMode === "party");
       if (shownMode === "challenge") {
-        ui.modalText.textContent = "挑战模式保留 12-16 爆炸清场，用来救命和冲分；分数越高越紧张，连续合成和高级果能把压力线顶回去。";
+        ui.modalText.textContent = "挑战模式 1-16 顺序合成，12-16 可以点击主动引爆救场；邪恶卜会触发压线、铁坨、封口、超重等压力事件。";
       } else if (shownMode === "party") {
-        ui.modalText.textContent = "派对时间主打有目标地颠锅：快递箱会开出彩带贴贴、箱底弹簧、清爽泡泡等小任务。12-16 留场/相册/展示，适合发疯和截图。";
+        ui.modalText.textContent = "派对时间主打收集和整活：1-16 顺序合成，12-16 留场并解锁相册，可手动收入相册再放回继续派对。";
       } else {
         ui.modalText.textContent = "普通模式一路合成到 16，不爆炸清场。满级大卜卜会收进丰收仓，适合慢慢合成、冲最高收获数。";
       }
@@ -1198,6 +1438,7 @@
     }
 
     function openPauseMenu(intent = "pause") {
+      if (!ui.albumDrawer.hidden) closeAlbum();
       if (!state.running || state.gameOver) {
         state.pendingMode = state.mode;
         ui.overlay.hidden = false;
@@ -1231,32 +1472,35 @@
         toast("先开始一局派对时间。");
         return;
       }
-      state.paused = true;
-      ui.overlay.hidden = false;
-      ui.modeRow.hidden = true;
-      ui.modalTitle.textContent = "卜卜相册";
-      ui.modalText.textContent = "把相册里的大卜卜放回箱子里，摆好队形一起派对一下。放出来的是展示卜卜，不会合成、不会爆炸，也不会重复加分。";
-      ui.continue.hidden = false;
-      ui.continue.textContent = "继续派对";
-      ui.restartMode.hidden = true;
-      ui.start.hidden = true;
-      ui.share.hidden = false;
-      ui.share.textContent = "复制派对战绩";
+      if (!ui.albumDrawer.hidden) {
+        closeAlbum();
+        return;
+      }
       renderAlbum();
+      ui.albumDrawer.hidden = false;
+      toast("派对相册打开啦。");
+      updateUi();
+    }
+
+    function closeAlbum() {
+      ui.albumDrawer.hidden = true;
+      ui.album.textContent = String(partyAlbumCount());
       updateUi();
     }
 
     function renderAlbum() {
-      ui.recordSummary.className = "album-grid";
-      ui.recordSummary.innerHTML = Array.from({ length: BUBU_FINAL_LEVEL - BUBU_START_LEVEL + 1 }, (_, i) => {
+      ui.albumGrid.innerHTML = Array.from({ length: BUBU_FINAL_LEVEL - BUBU_START_LEVEL + 1 }, (_, i) => {
         const level = BUBU_START_LEVEL + i;
         const count = state.partyAlbum[level] || 0;
+        const unlocked = !!state.partyAlbumUnlocked[level] || count > 0;
         const disabled = count <= 0 ? "disabled" : "";
-        return `<div class="album-item">
-          <img src="${fruitTypes[level].src}" alt="${fruitTypes[level].name}级大卜卜">
-          <b>${fruitTypes[level].name}级</b>
-          <span>x${count}</span>
-          <button type="button" data-release-bubu="${level}" ${disabled}>放出来</button>
+        const filled = unlocked;
+        return `<div class="album-item${filled ? "" : " empty"}">
+          <span class="album-level">${fruitTypes[level].name}</span>
+          ${filled
+            ? `<img src="${fruitTypes[level].src}" alt="${fruitTypes[level].name}级大卜卜"><span class="album-count">x${count}</span>`
+            : `<div class="album-empty-mark">?</div><span class="album-count">x0</span>`}
+          <button type="button" data-release-bubu="${level}" ${disabled}>放回箱子</button>
         </div>`;
       }).join("");
     }
@@ -1640,6 +1884,12 @@
       state.partyEnergy = 0;
       state.partyHeat = 0;
       state.partyAlbum = {};
+      state.partyAlbumUnlocked = {};
+      state.lastPartyEvilEffect = "";
+      state.lastChallengeEvilEffect = "";
+      state.challengePressurePushUntil = 0;
+      state.challengePressurePush = 0;
+      state.challengeSealUntil = 0;
       state.antiGravityUntil = 0;
       state.partyQuest = null;
       state.springPad = null;
@@ -1657,15 +1907,17 @@
       state.dangerTimer = 0;
       state.shake = 0;
       ui.overlay.hidden = true;
+      ui.albumDrawer.hidden = true;
+      ui.album.textContent = String(partyAlbumCount());
       ui.start.textContent = "开始收获";
       ui.share.textContent = "复制战绩";
       setPauseButtons(false);
       if (isParty()) requestPartyMotionAccess();
       logLine(isParty()
-        ? `${modeName()}开局：大卜卜会留在场上，点它可以收进相册。`
+        ? `${modeName()}开局：12-16 会留场并解锁相册，点它可以收进相册。`
         : (isEasy()
           ? `${modeName()}开局：一路合到 16，满级大卜卜会收进丰收仓。`
-          : `${modeName()}开局：先冲 ${bubuRoundName()}，爆开后继续进化。`));
+          : `${modeName()}开局：12-16 可继续合成，点它可以主动引爆救场。`));
       updateUi();
       drawNext();
     }
@@ -1714,13 +1966,18 @@
       return clamp(visual / 2.05, EVIL_RADIUS_MIN, EVIL_RADIUS_MAX);
     }
 
+    function partySpecialRadius() {
+      const visual = (targetVisualBox(BUBU_START_LEVEL) + targetVisualBox(BUBU_START_LEVEL + 1)) / 2;
+      return clamp(visual / 4.8, PARTY_SPECIAL_RADIUS_MIN, PARTY_SPECIAL_RADIUS_MAX);
+    }
+
     function fruitScale() {
       const cssWidth = canvas.clientWidth || W;
       return clamp(cssWidth / 360 * 1.52, 1.24, 1.58);
     }
 
     function visualBoxScale() {
-      return clamp(fruitScale() / 1.52, .9, 1.06);
+      return clamp(fruitScale() / 1.52, .9, 1.06) * VISUAL_SIZE_TUNE;
     }
 
     function targetVisualBox(level) {
@@ -1772,6 +2029,33 @@
       return randInt(3, Math.min(4, max));
     }
 
+    function specialBoxActive() {
+      return state.fruits.some(f => f.special === "sticky" || f.special === "mystery");
+    }
+
+    function weightedChoice(options, last = "") {
+      const pool = options.filter(option => option.kind !== last);
+      const choices = pool.length ? pool : options;
+      const total = choices.reduce((sum, option) => sum + option.weight, 0);
+      let roll = Math.random() * total;
+      for (const option of choices) {
+        roll -= option.weight;
+        if (roll <= 0) return option.kind;
+      }
+      return choices[choices.length - 1].kind;
+    }
+
+    function randomPartyEvilEffect() {
+      const kind = weightedChoice([
+        { kind: "sticky", weight: 25 },
+        { kind: "fakeMerge", weight: 20 },
+        { kind: "blast", weight: 20 },
+        { kind: "fruitRain", weight: 35 }
+      ], state.lastPartyEvilEffect);
+      state.lastPartyEvilEffect = kind;
+      return kind;
+    }
+
     function spawnFruit(level, options = {}) {
       const isEvil = !!options.evil;
       const type = fruitTypes[level];
@@ -1791,6 +2075,7 @@
         born: performance.now(),
         mergeLock: options.mergeLock ?? 0,
         special: options.special || "",
+        partyEvilEffect: options.partyEvilEffect || "",
         triggerAt: options.triggerAt || 0,
         stickyUntil: 0
       });
@@ -1857,11 +2142,13 @@
     function partyDropPlan() {
       const roll = Math.random();
       const heat = state.partyHeat / 100;
+      const canDropSpecial = !specialBoxActive();
       if (roll < .60 - heat * .08) return { kind: "normal", count: 1, label: "定点投放" };
       if (roll < .75 - heat * .04) return { kind: "normal", count: 2, label: "双响定点" };
       if (roll < .85) return { kind: "high", count: heat > .7 && Math.random() < .18 ? 2 : 1, label: "高阶定点" };
       if (roll < .91) return { kind: "sprinkle", count: randInt(3, 4 + Math.floor(heat * 2)), label: "小果雨" };
-      if (roll < .96) return { kind: "sticky", count: 1, label: "邪恶卜盲盒" };
+      if (!canDropSpecial) return { kind: "normal", count: 2, label: "安全投放" };
+      if (roll < .96) return { kind: "sticky", count: 1, label: "邪恶卜盲盒", effect: randomPartyEvilEffect() };
       return { kind: "mystery", count: 1, label: "神秘快递箱" };
     }
 
@@ -1882,7 +2169,7 @@
           const isSpecial = plan.kind === "sticky" || plan.kind === "mystery";
           const level = isSpecial ? EVIL_LEVEL : randomPartyLevel(plan.kind);
           const isEvil = plan.kind === "sticky";
-          const radius = isSpecial ? evilRadius() : radiusForLevel(level);
+          const radius = isSpecial ? partySpecialRadius() : radiusForLevel(level);
           const origin = partyDropOrigin(radius, i, plan.count, plan.kind);
           spawnFruit(level, {
             ...origin,
@@ -1890,6 +2177,7 @@
             r: radius,
             mergeLock: isSpecial ? 999 : .04,
             special: plan.kind === "sticky" ? "sticky" : (plan.kind === "mystery" ? "mystery" : ""),
+            partyEvilEffect: plan.effect || "",
             triggerAt: performance.now() + 3000
           });
           burst(origin.x, origin.y + 8, 8 + Math.min(18, level * 2));
@@ -1939,6 +2227,138 @@
       vibrate([30, 40, 30]);
       toast(`黏黏卜黏住 ${stuck} 个果实！`);
       logLine(`派对事件：黏黏卜让 ${stuck} 个果实 10 秒不能合成、不能晃动。`);
+    }
+
+    function triggerFakeMergeAt(x, y) {
+      const candidates = state.fruits.filter(f => !f.evil && !f.special && !f.partyBubu && !isSticky(f) && f.level < BUBU_START_LEVEL);
+      let pair = null;
+      for (let level = Math.min(BUBU_START_LEVEL - 1, partyMaxDropLevel() + 2); level >= 0; level -= 1) {
+        const same = candidates
+          .filter(f => f.level === level)
+          .sort((a, b) => Math.hypot(a.x - x, a.y - y) - Math.hypot(b.x - x, b.y - y));
+        if (same.length >= 2) {
+          pair = same.slice(0, 2);
+          break;
+        }
+      }
+      if (!pair) {
+        triggerPartyBlastAt(x, y);
+        return;
+      }
+      const now = performance.now();
+      for (const f of pair) {
+        f.fakeMergeUntil = now + PARTY_FAKE_MERGE_MS;
+        f.mergeLock = Math.max(f.mergeLock, PARTY_FAKE_MERGE_MS / 1000);
+        f.vx += (x - f.x) * 2.5;
+        f.vy += (y - f.y) * 1.6 - 120;
+      }
+      setTimeout(() => {
+        for (const f of pair) {
+          f.vx += (f.x < x ? -1 : 1) * rand(130, 220);
+          f.vy -= rand(110, 210);
+        }
+        if (state.running || state.gameOver) burst(x, y, 24);
+        toast("骗你的！");
+      }, 620);
+      state.shake = 8;
+      addPartyHeat(12);
+      burst(x, y, 34);
+      playMergeSound(pair[0].level + 1);
+      vibrate([18, 24, 18, 36]);
+      toast("要合啦？");
+      logLine("派对事件：邪恶卜假装合成，最后弹开。");
+    }
+
+    function triggerPartyBlastAt(x, y) {
+      let cleared = 0;
+      for (const f of state.fruits) {
+        if (f.special || f.partyBubu) continue;
+        const dx = f.x - x;
+        const dy = f.y - y;
+        const dist = Math.hypot(dx, dy) || 1;
+        if (dist > 138 + f.r) continue;
+        const power = (1 - dist / (138 + f.r));
+        f.vx += (dx / dist) * (220 + 360 * power);
+        f.vy += (dy / dist) * (160 + 260 * power) - 130 * power;
+        if (!f.evil && f.level <= 3) {
+          f.blastClear = true;
+          cleared += 1;
+        }
+      }
+      if (cleared) {
+        state.fruits = state.fruits.filter(f => {
+          if (!f.blastClear) return true;
+          burst(f.x, f.y, 10 + f.level * 2);
+          state.score += 60 + f.level * 30;
+          return false;
+        });
+        setBestForMode(state.score);
+        saveRecords();
+      }
+      state.shake = 16;
+      addPartyHeat(16);
+      burst(x, y, 72);
+      playHarvestSound();
+      vibrate([28, 34, 50]);
+      toast(`爆爆卜：轰一下！清掉 ${cleared} 个小果`);
+      logLine(`派对事件：爆爆卜局部爆炸，清掉 ${cleared} 个低级果。`);
+    }
+
+    function partyBoardLoad() {
+      const dangerY = currentDangerY();
+      let top = FLOOR;
+      for (const f of state.fruits) {
+        if (f.special || f.partyBubu) continue;
+        top = Math.min(top, f.y - f.r);
+      }
+      return clamp((FLOOR - top) / Math.max(1, FLOOR - dangerY), 0, 1);
+    }
+
+    function weightedPartyRainLevel(load) {
+      const roll = Math.random();
+      if (load > .72) {
+        if (roll < .34) return randInt(3, 5);
+        if (roll < .78) return randInt(5, 7);
+        if (roll < .96) return randInt(7, 9);
+        return randInt(9, BUBU_START_LEVEL - 1);
+      }
+      if (roll < .45) return randInt(0, 2);
+      if (roll < .80) return randInt(3, 5);
+      if (roll < .95) return randInt(6, 8);
+      return randInt(9, BUBU_START_LEVEL - 1);
+    }
+
+    function triggerPartyFruitRainAt(x, y) {
+      const load = partyBoardLoad();
+      const count = load > .72 ? randInt(8, 11) : (load > .45 ? randInt(12, 15) : randInt(16, 18));
+      for (let i = 0; i < count; i += 1) {
+        setTimeout(() => {
+          if (!state.running || state.gameOver || !isParty()) return;
+          const level = weightedPartyRainLevel(load);
+          const radius = radiusForLevel(level);
+          const px = clamp(x + rand(-108, 108), WALL + radius, W - WALL - radius);
+          spawnFruit(level, {
+            x: px,
+            y: SPAWN_Y - rand(0, 36),
+            vx: rand(-170, 170) + (px - x) * .7,
+            vy: rand(-120, 20),
+            mergeLock: .08
+          });
+          burst(px, SPAWN_Y + 8, 5 + Math.min(16, level * 2));
+        }, i * 58);
+      }
+      addPartyHeat(22);
+      playPartySound(1.45);
+      vibrate([18, 24, 18, 24, 36]);
+      toast("果雨卜：天降一场大的！");
+      logLine(`派对事件：果雨卜倾泻 ${count} 个果实。`);
+    }
+
+    function triggerPartyEvilAt(x, y, effect) {
+      if (effect === "fakeMerge") triggerFakeMergeAt(x, y);
+      else if (effect === "blast") triggerPartyBlastAt(x, y);
+      else if (effect === "fruitRain") triggerPartyFruitRainAt(x, y);
+      else triggerStickyAt(x, y);
     }
 
     function triggerMysteryAt(x, y) {
@@ -2078,7 +2498,7 @@
       }
       const isEvil = state.nextEvil;
       const radius = isEvil ? evilRadius() : radiusForLevel(state.nextLevel);
-      const x = clamp(state.aimX, WALL + radius, W - WALL - radius);
+      const x = clamp(state.aimX, Math.max(WALL + radius, aimMin(radius)), Math.min(W - WALL - radius, aimMax(radius)));
       spawnFruit(state.nextLevel, { x, evil: isEvil, r: radius });
       state.dropCount += 1;
       rollNextDrop();
@@ -2161,6 +2581,7 @@
       if (!state.running || state.paused || state.gameOver) return;
       updateChallengePressure(dt);
       updateEvilFruits();
+      updateChallengeEffects();
       updatePartySpecials();
       updatePendingBubus();
       updatePartyEnergy(dt);
@@ -2187,7 +2608,8 @@
           f.vy = 0;
           continue;
         }
-        const grav = isParty() && now < state.antiGravityUntil ? -520 : gravity;
+        const heavy = (f.ironUntil && now < f.ironUntil) || (f.heavyUntil && now < f.heavyUntil);
+        const grav = isParty() && now < state.antiGravityUntil ? -520 : gravity * (heavy ? 1.75 : 1);
         f.vy += grav * dt;
         f.x += f.vx * dt;
         f.y += f.vy * dt;
@@ -2239,8 +2661,8 @@
             const nx = dx / dist;
             const ny = dy / dist;
             const overlap = minDist - dist;
-            const aMass = ar * ar;
-            const bMass = br * br;
+            const aMass = ar * ar * (a.weightMul || 1);
+            const bMass = br * br * (b.weightMul || 1);
             const total = aMass + bMass;
             a.x -= nx * overlap * (bMass / total);
             a.y -= ny * overlap * (bMass / total);
@@ -2279,19 +2701,99 @@
       state.pressureY = clamp(state.pressureY - lift, DANGER_Y, DANGER_MAX_Y);
     }
 
+    function pickChallengeEvilEffect() {
+      const kind = weightedChoice([
+        { kind: "press", weight: 30 },
+        { kind: "iron", weight: 25 },
+        { kind: "seal", weight: 25 },
+        { kind: "heavy", weight: 20 }
+      ], state.lastChallengeEvilEffect);
+      state.lastChallengeEvilEffect = kind;
+      return kind;
+    }
+
+    function triggerChallengeEvilAt(fruit) {
+      const effect = pickChallengeEvilEffect();
+      if (effect === "press") {
+        state.challengePressurePush = 34;
+        state.challengePressurePushUntil = performance.now() + CHALLENGE_PRESS_MS;
+        state.shake = Math.max(state.shake, 10);
+        burst(fruit.x, fruit.y, 36);
+        toast("压线卜：箱口下压！");
+        logLine("挑战邪恶卜：压力线临时下降。");
+        return false;
+      }
+      if (effect === "seal") {
+        state.challengeSealUntil = performance.now() + CHALLENGE_SEAL_MS;
+        state.aimX = clampAim(state.aimX);
+        state.shake = Math.max(state.shake, 8);
+        burst(fruit.x, fruit.y, 32);
+        toast("封口卜：入口变窄！");
+        logLine("挑战邪恶卜：左右投放范围临时收窄。");
+        return false;
+      }
+      if (effect === "heavy") {
+        const candidates = state.fruits.filter(f => f.id !== fruit.id && !f.evil && !f.special && !f.challengeBubu && !f.partyBubu && !isSticky(f));
+        const target = candidates.sort((a, b) => Math.hypot(a.x - fruit.x, a.y - fruit.y) - Math.hypot(b.x - fruit.x, b.y - fruit.y))[0];
+        if (target) {
+          target.heavyUntil = performance.now() + CHALLENGE_HEAVY_MS;
+          target.weightMul = 3.2;
+          target.vy += 260;
+          burst(target.x, target.y, 30);
+        }
+        state.shake = Math.max(state.shake, 10);
+        burst(fruit.x, fruit.y, 26);
+        toast("超重卜：小心塌方！");
+        logLine("挑战邪恶卜：一个果实短时间变重。");
+        return false;
+      }
+
+      fruit.evil = false;
+      fruit.special = "";
+      fruit.level = EVIL_LEVEL;
+      fruit.r = evilRadius();
+      fruit.mergeLock = CHALLENGE_IRON_MS / 1000;
+      fruit.ironUntil = performance.now() + CHALLENGE_IRON_MS;
+      fruit.weightMul = 5.5;
+      fruit.vx = 0;
+      fruit.vy = 260;
+      fruit.born = performance.now();
+      state.shake = Math.max(state.shake, 12);
+      burst(fruit.x, fruit.y, 40);
+      toast("铁坨卜：沉甸甸！");
+      logLine("挑战邪恶卜：铁坨卜变成重障碍，稍后变回普通果。");
+      return true;
+    }
+
     function clearAroundBubu(x, y, level) {
-      const radius = (isParty() ? 138 : 118) + (level - BUBU_START_LEVEL) * 10;
-      const maxClearLevel = isParty() ? 5 : 4;
+      const radius = isChallenge()
+        ? 190 + (level - BUBU_START_LEVEL) * 30
+        : (isParty() ? 138 : 118) + (level - BUBU_START_LEVEL) * 10;
+      const maxClearLevel = isChallenge()
+        ? Math.min(BUBU_START_LEVEL - 1, 6 + (level - BUBU_START_LEVEL))
+        : (isParty() ? 5 : 4);
       let cleared = 0;
+      let shoved = 0;
       state.fruits = state.fruits.filter(f => {
-        if (f.evil || f.level > maxClearLevel) return true;
         const dx = f.x - x;
         const dy = f.y - y;
-        if (Math.hypot(dx, dy) > radius + f.r) return true;
+        const dist = Math.hypot(dx, dy) || 1;
+        if (dist > radius + f.r) return true;
+        if (isChallenge() && (f.evil || f.level > maxClearLevel)) {
+          const power = Math.max(.18, 1 - dist / (radius + f.r));
+          f.vx += (dx / dist) * (260 + power * 520);
+          f.vy += (dy / dist) * (180 + power * 360) - 180 * power;
+          f.mergeLock = Math.min(f.mergeLock, .08);
+          shoved += 1;
+          burst(f.x, f.y, 4 + Math.min(12, f.level * 2));
+          return true;
+        }
+        if (f.evil || f.level > maxClearLevel) return true;
         cleared += 1;
         burst(f.x, f.y, 8 + f.level * 2);
         return false;
       });
+      if (isChallenge() && shoved) logLine(`引爆震开 ${shoved} 个高阶果。`);
       return cleared;
     }
 
@@ -2317,16 +2819,16 @@
       records.harvests += 1;
       setBestForMode(state.score);
       saveRecords();
-      state.shake = 18;
-      burst(x, y, 120 + (level - BUBU_START_LEVEL) * 18);
+      state.shake = isChallenge() ? 26 : 18;
+      burst(x, y, (isChallenge() ? 190 : 120) + (level - BUBU_START_LEVEL) * (isChallenge() ? 36 : 18));
       setTimeout(() => {
-        if (state.running || state.gameOver) burst(x, y, 58 + (level - BUBU_START_LEVEL) * 12);
+        if (state.running || state.gameOver) burst(x, y, (isChallenge() ? 96 : 58) + (level - BUBU_START_LEVEL) * (isChallenge() ? 20 : 12));
       }, 120);
       playHarvestSound();
       vibrate([35, 40, 60]);
       raisePressure(level + 3);
       logLine(`${fruitTypes[level].name} 级大卜卜爆开，清掉 ${cleared} 个低级果，奖励 +${bonus}`);
-      toast(`${bubuRoundName(level)}爆开！+${bonus}`);
+      toast(`${bubuRoundName(level)}大爆发！清掉 ${cleared} 个`);
       state.bubuTargetLevel = Math.min(BUBU_FINAL_LEVEL, state.bubuTargetLevel + 1);
     }
 
@@ -2356,17 +2858,14 @@
       for (let i = 0; i < state.fruits.length; i += 1) {
         const a = state.fruits[i];
         if (used.has(a.id) || a.evil || a.mergeLock > 0 || isSticky(a)) continue;
-        if (isEasy()) {
-          if (a.level >= BUBU_FINAL_LEVEL) continue;
-        } else if (a.level >= BUBU_START_LEVEL) continue;
+        if (a.level >= BUBU_FINAL_LEVEL) continue;
         for (let j = i + 1; j < state.fruits.length; j += 1) {
           const b = state.fruits[j];
           if (used.has(b.id) || b.evil || b.mergeLock > 0 || isSticky(b) || a.level !== b.level) continue;
           if (!shouldMerge(a, b)) continue;
           used.add(a.id);
           used.add(b.id);
-          const nominalNextLevel = a.level + 1;
-          const nextLevel = !isEasy() && nominalNextLevel >= BUBU_START_LEVEL ? bubuTargetLevel() : nominalNextLevel;
+          const nextLevel = a.level + 1;
           const type = fruitTypes[nextLevel];
           const nx = (a.x + b.x) / 2;
           const ny = (a.y + b.y) / 2;
@@ -2408,6 +2907,8 @@
               });
               toast(nextLevel >= BUBU_FINAL_LEVEL ? "满级大卜卜出现！5秒后收仓！" : "大卜卜继续长大！");
             } else if (isParty()) {
+              state.partyAlbumUnlocked[nextLevel] = true;
+              if (!ui.albumDrawer.hidden) renderAlbum();
               created.push({
                 id: state.id++,
                 level: nextLevel,
@@ -2417,12 +2918,11 @@
                 vy: -110,
                 r: radius,
                 born: now,
-                mergeLock: 999,
+                mergeLock: nextLevel >= BUBU_FINAL_LEVEL ? 999 : .12,
                 partyBubu: true
               });
-              state.bubuTargetLevel = Math.min(BUBU_FINAL_LEVEL, state.bubuTargetLevel + 1);
               addPartyHeat(22 + (nextLevel - BUBU_START_LEVEL) * 6);
-              logLine(`${bubuRoundName(nextLevel)}登场，留在派对里加成分数。`);
+              logLine(`${bubuRoundName(nextLevel)}登场并解锁相册。`);
               toast(`${bubuRoundName(nextLevel)}登场！点它收进相册`);
             } else {
               created.push({
@@ -2434,11 +2934,10 @@
                 vy: -160,
                 r: radius,
                 born: now,
-                mergeLock: 999,
-                pendingHarvest: true,
-                pendingHarvestAt: now + BUBU_HOLD_MS
+                mergeLock: nextLevel >= BUBU_FINAL_LEVEL ? 999 : .12,
+                challengeBubu: true
               });
-              toast(`${bubuRoundName(nextLevel)}出现！5秒后爆开！`);
+              toast(`${bubuRoundName(nextLevel)}出现！点它引爆救场`);
             }
           } else {
             const radius = radiusForLevel(nextLevel);
@@ -2464,7 +2963,9 @@
     }
 
     function currentDangerY() {
-      return isChallenge() && state.pressureUnlocked ? state.pressureY : DANGER_Y;
+      if (!isChallenge() || !state.pressureUnlocked) return DANGER_Y;
+      const push = performance.now() < state.challengePressurePushUntil ? state.challengePressurePush : 0;
+      return clamp(state.pressureY + push, DANGER_Y, DANGER_MAX_Y);
     }
 
     function pressureGraceActive() {
@@ -2493,11 +2994,41 @@
       }
     }
 
+    function updateChallengeEffects() {
+      if (!isChallenge()) return;
+      const now = performance.now();
+      for (const f of state.fruits) {
+        if (f.heavyUntil && now >= f.heavyUntil) {
+          f.heavyUntil = 0;
+          f.weightMul = 1;
+        }
+        if (!f.ironUntil || now < f.ironUntil) continue;
+        const target = clamp(f.targetLevel ?? randomEvilTargetLevel(), 0, BUBU_START_LEVEL - 1);
+        f.ironUntil = 0;
+        f.weightMul = 1;
+        f.level = target;
+        f.r = radiusForLevel(target);
+        f.mergeLock = .18;
+        f.born = now;
+        burst(f.x, f.y, 18 + target * 2);
+        toast(`铁坨卜变成 ${fruitTypes[target].name} 了`);
+        logLine(`铁坨卜结束，变成 ${fruitTypes[target].name}。`);
+      }
+    }
+
     function updateEvilFruits() {
       const now = performance.now();
+      const removeIds = new Set();
       for (const f of state.fruits) {
         if (f.special) continue;
         if (!f.evil || now < f.evilUntil) continue;
+        if (isChallenge()) {
+          const keep = triggerChallengeEvilAt(f);
+          playEvilTransformSound();
+          vibrate([22, 28, 22]);
+          if (!keep) removeIds.add(f.id);
+          continue;
+        }
         const target = clamp(f.targetLevel, 0, BUBU_START_LEVEL - 1);
         const type = fruitTypes[target];
         f.evil = false;
@@ -2510,6 +3041,7 @@
         vibrate([16, 18, 16]);
         toast(`邪恶卜变成 ${type.name} 了`);
       }
+      if (removeIds.size) state.fruits = state.fruits.filter(f => !removeIds.has(f.id));
     }
 
     function isSticky(fruit) {
@@ -2528,7 +3060,7 @@
       const ids = new Set(triggered.map(f => f.id));
       state.fruits = state.fruits.filter(f => !ids.has(f.id));
       for (const f of triggered) {
-        if (f.special === "sticky") triggerStickyAt(f.x, f.y);
+        if (f.special === "sticky") triggerPartyEvilAt(f.x, f.y, f.partyEvilEffect);
         else if (f.special === "mystery") triggerMysteryAt(f.x, f.y);
       }
     }
@@ -2588,21 +3120,80 @@
       return nx * nx + ny * ny <= 1;
     }
 
+    function visuallyEdgesTouch(a, b) {
+      const av = getVisualSize(a.level, a.r);
+      const bv = getVisualSize(b.level, b.r);
+      const dx = Math.abs(a.x - b.x);
+      const dy = Math.abs(a.y - b.y);
+      const halfW = (av.w + bv.w) / 2;
+      const halfH = (av.h + bv.h) / 2;
+      const gapX = dx - halfW;
+      const gapY = dy - halfH;
+      const wideShape = Math.max(av.w / Math.max(1, av.h), bv.w / Math.max(1, bv.h)) > 1.35;
+      const tolerance = clamp(
+        Math.min(av.w, av.h, bv.w, bv.h) * (isParty() ? .12 : .1) + (wideShape ? 2 : 0),
+        4,
+        isParty() ? 10 : 8
+      );
+      return gapX <= tolerance && gapY <= tolerance;
+    }
+
+    function visuallyCloseEnoughToMerge(a, b) {
+      const av = getVisualSize(a.level, a.r);
+      const bv = getVisualSize(b.level, b.r);
+      const dx = Math.abs(a.x - b.x);
+      const dy = Math.abs(a.y - b.y);
+      const gapX = dx - (av.w + bv.w) / 2;
+      const gapY = dy - (av.h + bv.h) / 2;
+      const overlapX = (av.w + bv.w) / 2 - dx;
+      const overlapY = (av.h + bv.h) / 2 - dy;
+      const minSide = Math.min(av.w, av.h, bv.w, bv.h);
+      const tallOrWide = Math.max(
+        av.h / Math.max(1, av.w),
+        bv.h / Math.max(1, bv.w),
+        av.w / Math.max(1, av.h),
+        bv.w / Math.max(1, bv.h)
+      ) > 1.25;
+      const edgeTolerance = clamp(minSide * (tallOrWide ? .24 : .16), 7, tallOrWide ? 18 : 12);
+      const physicsTouch = Math.hypot(a.x - b.x, a.y - b.y) <= (getPhysicsRadius(a) + getPhysicsRadius(b)) * 1.035;
+      const sideBySide = gapX <= edgeTolerance && overlapY >= Math.min(av.h, bv.h) * .28;
+      const stacked = gapY <= edgeTolerance && overlapX >= Math.min(av.w, bv.w) * .28;
+      return physicsTouch && (sideBySide || stacked);
+    }
+
+    function narrowBodyCloseEnough(a, b) {
+      const av = getVisualSize(a.level, a.r);
+      const bv = getVisualSize(b.level, b.r);
+      const ar = Math.max(1, av.h / av.w);
+      const br = Math.max(1, bv.h / bv.w);
+      if (Math.max(ar, br) < 1.22) return false;
+      const dx = Math.abs(a.x - b.x);
+      const dy = Math.abs(a.y - b.y);
+      const visualHalfW = (av.w + bv.w) / 2;
+      const visualHalfH = (av.h + bv.h) / 2;
+      const softHalfW = Math.max(visualHalfW, (getPhysicsRadius(a) + getPhysicsRadius(b)) * .72);
+      const horizontalGap = dx - softHalfW;
+      const verticalOverlap = visualHalfH - dy;
+      return horizontalGap <= 6 && verticalOverlap >= Math.min(av.h, bv.h) * .24;
+    }
+
     function shouldMerge(a, b) {
       if (visuallyTouches(a, b)) return true;
+      if (visuallyEdgesTouch(a, b)) return true;
+      if (visuallyCloseEnoughToMerge(a, b)) return true;
+      if (narrowBodyCloseEnough(a, b)) return true;
 
       const dx = Math.abs(a.x - b.x);
       const dy = Math.abs(a.y - b.y);
       const dist = Math.hypot(dx, dy);
       const touchRadius = getPhysicsRadius(a) + getPhysicsRadius(b);
-      if (dist <= touchRadius * (isParty() ? .96 : .92)) return true;
+      const physicsTouch = dist <= touchRadius * (isParty() ? .9 : .86);
 
       const av = getVisualSize(a.level, a.r);
       const bv = getVisualSize(b.level, b.r);
-      const closeEnough = dx <= (av.w + bv.w) * (isParty() ? .46 : .43) &&
-        dy <= (av.h + bv.h) * (isParty() ? .46 : .43) &&
-        dist <= touchRadius * (isParty() ? 1 : .95);
-      return closeEnough;
+      const visualBoxTouch = dx <= (av.w + bv.w) * (isParty() ? .49 : .475) &&
+        dy <= (av.h + bv.h) * (isParty() ? .49 : .475);
+      return physicsTouch && visualBoxTouch;
     }
 
     function partyAlbumText() {
@@ -2613,6 +3204,7 @@
 
     function collectPartyBubu(fruit) {
       if (!fruit || !isParty() || !fruit.partyBubu) return false;
+      state.partyAlbumUnlocked[fruit.level] = true;
       state.partyAlbum[fruit.level] = (state.partyAlbum[fruit.level] || 0) + 1;
       state.fruits = state.fruits.filter(f => f.id !== fruit.id);
       const bonus = 900 + (fruit.level - BUBU_START_LEVEL) * 420;
@@ -2630,6 +3222,7 @@
         ? `${bubuRoundName(fruit.level)}回到相册。`
         : `${bubuRoundName(fruit.level)}收进相册，纪念分 +${bonus}`);
       toast(fruit.displayBubu ? `${bubuRoundName(fruit.level)}回相册！` : `${bubuRoundName(fruit.level)}进相册！+${bonus}`);
+      if (!ui.albumDrawer.hidden) renderAlbum();
       updateUi();
       return true;
     }
@@ -2649,20 +3242,17 @@
         level,
         x,
         y: SPAWN_Y + rand(-10, 18),
-        vx: rand(-90, 90),
-        vy: rand(-40, 30),
+        vx: rand(-70, 70),
+        vy: rand(-35, 25),
         r: radius,
         born: now,
-        mergeLock: 999,
+        mergeLock: level >= BUBU_FINAL_LEVEL ? 999 : .12,
         partyBubu: true,
         displayBubu: true
       });
-      state.paused = false;
-      ui.overlay.hidden = true;
-      setPauseButtons(false);
-      restoreRecordGrid();
+      if (!ui.albumDrawer.hidden) renderAlbum();
       addPartyHeat(12);
-      burst(x, SPAWN_Y + 20, 32 + (level - BUBU_START_LEVEL) * 8);
+      burst(x, SPAWN_Y + 20, 10 + (level - BUBU_START_LEVEL) * 3);
       playPartySound(1.15);
       vibrate([18, 28, 18]);
       logLine(`${bubuRoundName(level)}从相册回到派对现场。`);
@@ -2670,16 +3260,25 @@
       updateUi();
     }
 
-    function pickPartyBubu(point) {
-      if (!isParty() || !state.running || state.paused || state.gameOver) return null;
+    function pickModeBubu(point) {
+      if (!state.running || state.paused || state.gameOver || (!isParty() && !isChallenge())) return null;
       for (let i = state.fruits.length - 1; i >= 0; i -= 1) {
         const f = state.fruits[i];
-        if (!f.partyBubu) continue;
+        if (isParty() && !f.partyBubu) continue;
+        if (isChallenge() && !f.challengeBubu) continue;
         const dx = point.x - f.x;
         const dy = point.y - f.y;
         if (Math.hypot(dx, dy) <= f.r * 1.35) return f;
       }
       return null;
+    }
+
+    function detonateChallengeBubu(fruit) {
+      if (!fruit || !isChallenge() || !fruit.challengeBubu) return false;
+      state.fruits = state.fruits.filter(f => f.id !== fruit.id);
+      harvestBubu(fruit.x, fruit.y, fruit.level);
+      updateUi();
+      return true;
     }
 
     function clearForRevive() {
@@ -2776,7 +3375,8 @@
       const oy = state.shake ? rand(-state.shake, state.shake) : 0;
       ctx.clearRect(0, 0, W, H);
       ctx.save();
-      ctx.imageSmoothingEnabled = false;
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
       ctx.translate(ox, oy);
       drawCrate();
       drawAim();
@@ -2864,6 +3464,21 @@
       ctx.lineTo(W - WALL, 64);
       ctx.stroke();
 
+      if (challengeSealActive()) {
+        ctx.save();
+        ctx.fillStyle = "rgba(91,28,114,.28)";
+        ctx.fillRect(WALL, 64, 54, FLOOR - 64);
+        ctx.fillRect(W - WALL - 54, 64, 54, FLOOR - 64);
+        ctx.fillStyle = "#f3a4ff";
+        ctx.strokeStyle = "#2a160b";
+        ctx.lineWidth = 3;
+        ctx.font = "900 13px Microsoft YaHei, sans-serif";
+        ctx.textAlign = "center";
+        ctx.strokeText("封口", W / 2, 86);
+        ctx.fillText("封口", W / 2, 86);
+        ctx.restore();
+      }
+
       if (isChallenge() && !state.pressureUnlocked) return;
       const dangerY = currentDangerY();
       ctx.strokeStyle = state.dangerTimer > 0 ? "#d94b38" : (isChallenge() ? "#b24bd9" : "rgba(255,230,111,.8)");
@@ -2883,8 +3498,10 @@
       if (!state.running || state.gameOver) return;
       const aimLevel = isParty() ? EVIL_LEVEL : state.nextLevel;
       const type = fruitTypes[aimLevel];
-      const radius = isParty() ? evilRadius() : (state.nextEvil ? evilRadius() : radiusForLevel(aimLevel));
-      const x = clamp(state.aimX, WALL + radius, W - WALL - radius);
+      const radius = isParty()
+        ? partySpecialRadius() * SPECIAL_AIM_PREVIEW_SCALE
+        : (state.nextEvil ? evilRadius() * SPECIAL_AIM_PREVIEW_SCALE : radiusForLevel(aimLevel));
+      const x = clamp(state.aimX, Math.max(WALL + radius, aimMin(radius)), Math.min(W - WALL - radius, aimMax(radius)));
       ctx.strokeStyle = "rgba(42,22,11,.32)";
       ctx.lineWidth = 2;
       ctx.setLineDash([6, 7]);
@@ -2913,9 +3530,10 @@
       }
       context.save();
       context.globalAlpha = alpha;
-      context.imageSmoothingEnabled = false;
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = "high";
       if (meta.special === "mystery") {
-        drawRadius = evilRadius();
+        drawRadius = Math.max(radius, partySpecialRadius());
         context.fillStyle = "#f7b345";
         context.fillRect(x - drawRadius * .72, y - drawRadius * .58, drawRadius * 1.44, drawRadius * 1.16);
         context.strokeStyle = "#2a160b";
@@ -2938,6 +3556,14 @@
         context.lineWidth = Math.max(3, drawRadius * .08);
         context.beginPath();
         context.arc(x, y, drawRadius * 1.18 * pulse, 0, Math.PI * 2);
+        context.stroke();
+      }
+      if (meta.challengeBubu) {
+        const pulse = Math.sin(performance.now() / 180) * .06 + .96;
+        context.strokeStyle = "rgba(243,164,255,.82)";
+        context.lineWidth = Math.max(3, drawRadius * .08);
+        context.beginPath();
+        context.arc(x, y, drawRadius * 1.16 * pulse, 0, Math.PI * 2);
         context.stroke();
       }
       context.fillStyle = "rgba(42,22,11,.22)";
@@ -2970,6 +3596,36 @@
         context.strokeText("?", x, y + drawRadius * .04);
         context.fillText("?", x, y + drawRadius * .04);
       }
+      if (meta.ironUntil && performance.now() < meta.ironUntil) {
+        const left = Math.ceil((meta.ironUntil - performance.now()) / 1000);
+        context.strokeStyle = "rgba(38,38,38,.86)";
+        context.lineWidth = Math.max(5, drawRadius * .13);
+        context.beginPath();
+        context.arc(x, y, drawRadius * 1.12, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = "#f7b345";
+        context.font = `900 ${Math.max(13, drawRadius * .3)}px Microsoft YaHei, sans-serif`;
+        context.textAlign = "center";
+        context.strokeStyle = "#2a160b";
+        context.lineWidth = 3;
+        context.strokeText(`重 ${left}`, x, y - drawRadius * 1.22);
+        context.fillText(`重 ${left}`, x, y - drawRadius * 1.22);
+      } else if (meta.heavyUntil && performance.now() < meta.heavyUntil) {
+        context.strokeStyle = "rgba(42,22,11,.58)";
+        context.lineWidth = Math.max(4, drawRadius * .1);
+        context.beginPath();
+        context.arc(x, y, drawRadius * 1.1, 0, Math.PI * 2);
+        context.stroke();
+      }
+      if (meta.fakeMergeUntil && performance.now() < meta.fakeMergeUntil) {
+        context.fillStyle = "#fff4c3";
+        context.font = `900 ${Math.max(13, drawRadius * .32)}px Microsoft YaHei, sans-serif`;
+        context.textAlign = "center";
+        context.strokeStyle = "#5b1c72";
+        context.lineWidth = 3;
+        context.strokeText("要合啦?", x, y - drawRadius * 1.2);
+        context.fillText("要合啦?", x, y - drawRadius * 1.2);
+      }
       if (isSticky(meta)) {
         const left = Math.ceil((meta.stickyUntil - performance.now()) / 1000);
         context.strokeStyle = "rgba(93,214,87,.82)";
@@ -2991,19 +3647,23 @@
 
     function drawNext() {
       nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
-      nextCtx.imageSmoothingEnabled = false;
+      nextCtx.imageSmoothingEnabled = true;
+      nextCtx.imageSmoothingQuality = "high";
       nextCtx.fillStyle = "#ffe6a6";
       nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
       nextCtx.fillStyle = "rgba(42,22,11,.08)";
       for (let y = 0; y < nextCanvas.height; y += 16) nextCtx.fillRect(0, y, nextCanvas.width, 4);
       if (isParty()) {
+        const box = 56 * SPECIAL_NEXT_PREVIEW_SCALE;
+        const left = 65 - box / 2;
+        const top = 64 - box / 2;
         nextCtx.fillStyle = "#f7b345";
-        nextCtx.fillRect(37, 34, 56, 56);
+        nextCtx.fillRect(left, top, box, box);
         nextCtx.strokeStyle = "#2a160b";
         nextCtx.lineWidth = 4;
-        nextCtx.strokeRect(37, 34, 56, 56);
+        nextCtx.strokeRect(left, top, box, box);
         nextCtx.fillStyle = "#fff4c3";
-        nextCtx.font = "900 46px Microsoft YaHei, sans-serif";
+        nextCtx.font = `900 ${Math.round(46 * SPECIAL_NEXT_PREVIEW_SCALE)}px Microsoft YaHei, sans-serif`;
         nextCtx.textAlign = "center";
         nextCtx.textBaseline = "middle";
         nextCtx.strokeStyle = "#2a160b";
@@ -3013,7 +3673,7 @@
         return;
       }
       const type = fruitTypes[state.nextLevel];
-      const radius = state.nextEvil ? EVIL_PREVIEW_RADIUS : Math.min(type.r, 42);
+      const radius = state.nextEvil ? evilRadius() * SPECIAL_NEXT_PREVIEW_SCALE : Math.min(type.r, 42);
       drawFruit(nextCtx, 65, 66, state.nextLevel, radius, 1, { evil: state.nextEvil });
     }
 
@@ -3057,6 +3717,8 @@
       ui.best.textContent = bestForMode();
       ui.album.disabled = !isParty();
       ui.album.style.opacity = isParty() ? "1" : ".55";
+      if (!isParty() && !ui.albumDrawer.hidden) closeAlbum();
+      ui.album.textContent = String(partyAlbumCount());
       if (state.dangerTimer > 0) {
         ui.danger.textContent = `爆仓倒计时 ${Math.max(0, 2.2 - state.dangerTimer).toFixed(1)}s`;
       } else if (isParty()) {
@@ -3071,7 +3733,9 @@
         ui.danger.textContent = "压力缓冲中";
       } else if (isChallenge()) {
         const pressure = Math.round(currentDangerY() - DANGER_Y);
-        ui.danger.textContent = `挑战压力 +${pressure}px`;
+        if (challengeSealActive()) ui.danger.textContent = "封口卜 · 入口变窄";
+        else if (performance.now() < state.challengePressurePushUntil) ui.danger.textContent = `压线卜 · 压力 +${pressure}px`;
+        else ui.danger.textContent = `挑战压力 +${pressure}px`;
       } else {
         ui.danger.textContent = "箱口警戒线";
       }
@@ -3097,19 +3761,20 @@
 
     function pointerToAim(event) {
       const point = pointerToGame(event);
-      state.aimX = clamp(point.x, WALL + 16, W - WALL - 16);
+      state.aimX = clampAim(point.x);
       return state.aimX;
     }
 
     function beginDrag(event) {
       const point = pointerToGame(event);
-      const bubu = pickPartyBubu(point);
-      if (bubu && collectPartyBubu(bubu)) {
+      const bubu = pickModeBubu(point);
+      const handledBubu = isParty() ? collectPartyBubu(bubu) : detonateChallengeBubu(bubu);
+      if (handledBubu) {
         feedback.dragging = false;
         feedback.activePointerId = null;
         return;
       }
-      state.aimX = clamp(point.x, WALL + 16, W - WALL - 16);
+      state.aimX = clampAim(point.x);
       pointerToAim(event);
       feedback.dragging = true;
       feedback.activePointerId = event.pointerId ?? null;
@@ -3185,23 +3850,24 @@
     }
     document.addEventListener("gesturestart", event => event.preventDefault());
     window.addEventListener("resize", () => {
-      state.aimX = clamp(state.aimX, WALL + 16, W - WALL - 16);
+      state.aimX = clampAim(state.aimX);
     });
     ui.drop.addEventListener("click", dropFruit);
     ui.left.addEventListener("click", () => {
-      state.aimX = clamp(state.aimX - 24, WALL + 16, W - WALL - 16);
+      state.aimX = clampAim(state.aimX - 24);
       unlockAudio();
       playMoveSound(state.aimX);
       vibrate(6);
     });
     ui.right.addEventListener("click", () => {
-      state.aimX = clamp(state.aimX + 24, WALL + 16, W - WALL - 16);
+      state.aimX = clampAim(state.aimX + 24);
       unlockAudio();
       playMoveSound(state.aimX);
       vibrate(6);
     });
     ui.album.addEventListener("click", openAlbum);
-    ui.recordSummary.addEventListener("click", event => {
+    ui.albumClose.addEventListener("click", closeAlbum);
+    ui.albumGrid.addEventListener("click", event => {
       const button = event.target.closest("[data-release-bubu]");
       if (!button) return;
       releaseAlbumBubu(Number(button.dataset.releaseBubu));
@@ -3262,7 +3928,7 @@
       else if (event.key === " ") dropFruit();
       else if (event.key.toLowerCase() === "p") applyPartyImpulse("button", 1.05);
       else return;
-      state.aimX = clamp(state.aimX, WALL + 16, W - WALL - 16);
+      state.aimX = clampAim(state.aimX);
       event.preventDefault();
     });
 
