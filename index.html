@@ -1463,9 +1463,50 @@
       { name: "16", src: "assets/fruit-16.png?v=1.5.0", r: 112, score: 3300, crop: [0, 0, 471, 640], visualScale: .9  }
     ];
 
+    const ASSET_VERSION = "1.5.1";
+
+    function versionedAsset(path) {
+      return `${path}?v=${ASSET_VERSION}`;
+    }
+
+    function uniqueList(items) {
+      return items.filter((item, index) => items.indexOf(item) === index);
+    }
+
+    function imageCandidates(type) {
+      const standardName = `fruit-${type.name}.png`;
+      const legacyName = `水果-${type.name}.png`;
+      const declared = type.src.split("?")[0];
+      return uniqueList([
+        declared,
+        `assets/${standardName}`,
+        `资产/${standardName}`,
+        `资源/${standardName}`,
+        standardName,
+        `assets/${legacyName}`,
+        `资产/${legacyName}`,
+        `资源/${legacyName}`,
+        legacyName
+      ]).map(versionedAsset);
+    }
+
     const images = fruitTypes.map(type => {
       const img = new Image();
-      img.src = type.src;
+      img.decoding = "async";
+      const candidates = imageCandidates(type);
+      let index = 0;
+      img.onerror = () => {
+        index += 1;
+        if (index < candidates.length) {
+          img.src = candidates[index];
+        } else {
+          type.imageFailed = true;
+        }
+      };
+      img.onload = () => {
+        type.loadedSrc = img.currentSrc || img.src;
+      };
+      img.src = candidates[index];
       return img;
     });
 
