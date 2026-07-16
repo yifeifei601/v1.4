@@ -1463,7 +1463,7 @@
       { name: "16", src: "assets/fruit-16.png?v=1.5.0", r: 112, score: 3300, crop: [0, 0, 471, 640], visualScale: .9  }
     ];
 
-    const ASSET_VERSION = "1.5.1";
+    const ASSET_VERSION = "1.5.2";
 
     function versionedAsset(path) {
       return `${path}?v=${ASSET_VERSION}`;
@@ -1490,25 +1490,61 @@
       ]).map(versionedAsset);
     }
 
-    const images = fruitTypes.map(type => {
+    function createFruitImage(type) {
       const img = new Image();
       img.decoding = "async";
       const candidates = imageCandidates(type);
       let index = 0;
-      img.onerror = () => {
-        index += 1;
-        if (index < candidates.length) {
-          img.src = candidates[index];
-        } else {
-          type.imageFailed = true;
-        }
-      };
-      img.onload = () => {
-        type.loadedSrc = img.currentSrc || img.src;
-      };
-      img.src = candidates[index];
+      let timer = null;
+      let settled = false;
+
+      img.loadPromise = new Promise(resolve => {
+        const finish = success => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          type.imageReady = success;
+          type.imageFailed = !success;
+          resolve(success);
+        };
+
+        const tryNext = () => {
+          clearTimeout(timer);
+          if (index >= candidates.length) {
+            finish(false);
+            return;
+          }
+          const candidate = candidates[index];
+          type.loadingSrc = candidate;
+          img.src = candidate;
+          timer = setTimeout(() => {
+            index += 1;
+            tryNext();
+          }, 4200);
+        };
+
+        img.addEventListener("load", () => {
+          if (img.naturalWidth) {
+            type.loadedSrc = img.currentSrc || img.src;
+            finish(true);
+          } else {
+            index += 1;
+            tryNext();
+          }
+        });
+
+        img.addEventListener("error", () => {
+          index += 1;
+          tryNext();
+        });
+
+        tryNext();
+      });
+
       return img;
-    });
+    }
+
+    const images = fruitTypes.map(createFruitImage);
 
     const state = {
       fruits: [],
@@ -1891,6 +1927,7 @@
     const popBass = [174.61, 196, 146.83, 233.08];
 
     function waitForImage(img) {
+      if (img.loadPromise) return img.loadPromise;
       return new Promise(resolve => {
         if (img.complete) {
           resolve();
@@ -1900,12 +1937,10 @@
         const finish = () => {
           if (done) return;
           done = true;
-          img.onload = null;
-          img.onerror = null;
           resolve();
         };
-        img.onload = finish;
-        img.onerror = finish;
+        img.addEventListener("load", finish, { once: true });
+        img.addEventListener("error", finish, { once: true });
         setTimeout(finish, 4500);
       });
     }
